@@ -7,7 +7,7 @@ from api.models import (
 from api.controllers import ChatController, IndexController, HealthController, CacheController
 from api.controllers import ChatStreamController, ChatHistoryController
 
-# 🔥 Phoenix instrumentation
+# Phoenix instrumentation
 from observability.tracing import trace_span
 
 router = APIRouter()
@@ -31,14 +31,14 @@ async def chat_endpoint(
                     "message": "How does routing work?",
                     "max_tokens": 800,
                     "temperature": 0.2,
-                    "bypass_cache": false
+                    "bypass_cache": False
                 },
             },
             "bypassCache": {
                 "summary": "Bypass cache",
                 "value": {
                     "message": "Explain semantic cache logic",
-                    "bypass_cache": true
+                    "bypass_cache": True
                 },
             },
         },
@@ -63,7 +63,7 @@ async def index_endpoint(
                 "summary": "Index infos folder",
                 "value": {
                     "path": "infos",
-                    "rebuild": false
+                    "rebuild": False
                 },
             }
         },

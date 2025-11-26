@@ -75,7 +75,7 @@
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             line-height: 1.1;
             margin-top: 0;
             padding-bottom: 1.5rem;
@@ -84,14 +84,14 @@
         }
 
         h2 {
-            font-size: 2rem;
+            font-size: 1.75rem;
             padding-bottom: 0.5rem;
             border-bottom: var(--border-width) solid var(--dark-blue);
             margin-top: 3rem;
         }
 
         h3 {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin-top: 2rem;
         }
 
@@ -324,12 +324,12 @@
         </ul>
     </nav>
 
+
     <div class="container" id="content">
         <!-- Markdown content will be rendered here -->
     </div>
 
-    <script id="markdown-source" type="text/plain">
-# CelerGraph Documentation
+    <script id="markdown-source" type="text/plain"># CelerGraph Documentation
 
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
 
@@ -412,72 +412,6 @@ The following were intentionally excluded as they are either wrappers, minimal u
 
 ### Rationale
 This selection focuses on FastAPI's core architecture, routing mechanisms, dependency injection system, and request/response lifecycle. These are the foundational components that developers most frequently need to understand. Excluded files are either thin wrappers around Starlette functionality or auxiliary features that don't represent core design patterns.
-
----
-
-## Key Python Packages
-
-### Core RAG and LLM
-- **langchain** (1.0.8) - Framework for building LLM applications with RAG pipelines
-- **langchain-groq** (1.0.1) - Groq LLM integration for fast inference
-- **langchain-community** (0.4.1) - Community-contributed LangChain integrations
-- **sentence-transformers** (5.1.2) - Generate semantic embeddings for text similarity
-- **LLM Model**: gpt-oss-120b (via Groq Cloud) - Large open-source instruction-tuned model for generation
-- **Embedding Model**: BAAI/bge-small-en-v1.5 - Lightweight 384-dim embeddings for semantic search
-
-### Vector Storage and Retrieval
-- **chromadb** (1.3.5) - Embedded vector database for semantic search
-- **neo4j** (6.0.3) - Graph database driver for knowledge graph storage
-
-### Knowledge Graph Extraction
-- **libcst** (1.8.6) - Concrete syntax tree parser for Python code analysis
-- **tree-sitter** (0.25.2) - Fast incremental parser for extracting code structure
-- **tree-sitter-languages** (1.10.2) - Language grammars for tree-sitter
-
-### API and Web Framework
-- **fastapi** (0.121.3) - High-performance async web framework for building APIs
-- **uvicorn** (0.38.0) - ASGI server for running FastAPI applications
-- **pydantic** (2.12.4) - Data validation and settings management using Python type annotations
-- **pydantic-settings** (2.12.0) - Environment variable and config management for Pydantic models
-
-### Observability and Monitoring
-- **arize-phoenix** (12.17.0) - LLM observability platform for tracing and debugging
-- **opentelemetry-sdk** (1.38.0) - OpenTelemetry implementation for distributed tracing
-- **opentelemetry-instrumentation-fastapi** (0.59b0) - Auto-instrumentation for FastAPI apps
-
-### Data Processing
-- **pandas** (2.3.3) - Data manipulation and analysis library
-- **numpy** (1.26.4) - Numerical computing with multidimensional arrays
-- **torch** (2.9.1) - PyTorch deep learning framework for embeddings
-
-### Code Quality and Linting
-- **ruff** (0.14.6) - Extremely fast Python linter and code formatter (replaces Flake8, Black, isort)
-- **mypy** (1.18.2) - Static type checker for Python to catch type errors before runtime
-
----
-
-## Design Patterns and Architecture Decisions
-
-### 1. Repository Pattern (`core/retrieval.py`, `core/embeddings.py`)
-**Why**: Abstracts data access logic for ChromaDB and Neo4j, making it easy to swap vector stores or graph databases without changing business logic. Enables clean separation between storage and application layers.
-
-### 2. Factory Pattern (`core/services.py`)
-**Why**: Centralizes creation of LLM clients, embedding models, and vector stores. Ensures consistent configuration and makes dependency injection straightforward for testing and observability.
-
-### 3. Decorator Pattern (`observability/tracing/decorators.py`)
-**Why**: Adds cross-cutting concerns like tracing, logging, and metrics without modifying core business logic. The `@trace_span` decorator instruments functions cleanly for Phoenix observability.
-
-### 4. Strategy Pattern (`core/graphrag.py`)
-**Why**: Allows switching between different RAG strategies (e.g., with/without Neo4j graph expansion, different retrieval methods) at runtime based on configuration flags like `USE_NEO4J`.
-
-### 5. Pipeline Pattern (Knowledge Graph Build: `graph_indexing/kgbuild/`)
-**Why**: Breaks down complex knowledge graph extraction into sequential stages (parse, extract, transform, load). Each stage is independently testable and can be replaced or enhanced.
-
-### 6. Middleware Pattern (`api/main.py`)
-**Why**: Separates concerns like CORS, rate limiting, and OpenTelemetry instrumentation from core API logic. Middleware runs before/after requests without cluttering route handlers.
-
-### 7. Controller Pattern (`api/controllers.py`)
-**Why**: Separates HTTP request/response handling from business logic. Controllers orchestrate services, validate input via Pydantic models, and format responses while keeping routes thin and testable.
 
 ### 8. Semantic Caching (`core/retrieval.py` - `semantic_cache` collection)
 **Why**: Reduces LLM API costs and latency by caching semantically similar queries. Uses vector similarity instead of exact string matching, improving cache hit rates for paraphrased questions.
@@ -565,7 +499,7 @@ All services (FastAPI, ChromaDB, Phoenix) run natively on Windows/Linux/macOS wi
 
 ### 5. ChromaDB Scalability
 - **Limitation**: Embedded ChromaDB not optimized for multi-user production workloads
-- \`openapi/\` - OpenAPI schema generation utilities
+- `openapi/` - OpenAPI schema generation utilities
 
 **Core Modules**
 - \`__init__.py\` - Package initializer and public API surface
@@ -647,28 +581,28 @@ This selection focuses on FastAPI's core architecture, routing mechanisms, depen
 
 ## Design Patterns and Architecture Decisions
 
-### 1. Repository Pattern (\`core/retrieval.py\`, \`core/embeddings.py\`)
+### 1. Repository Pattern (`core/retrieval.py`, `core/embeddings.py`)
 **Why**: Abstracts data access logic for ChromaDB and Neo4j, making it easy to swap vector stores or graph databases without changing business logic. Enables clean separation between storage and application layers.
 
-### 2. Factory Pattern (\`core/services.py\`)
+### 2. Factory Pattern (`core/services.py`)
 **Why**: Centralizes creation of LLM clients, embedding models, and vector stores. Ensures consistent configuration and makes dependency injection straightforward for testing and observability.
 
-### 3. Decorator Pattern (\`observability/tracing/decorators.py\`)
-**Why**: Adds cross-cutting concerns like tracing, logging, and metrics without modifying core business logic. The \`@trace_span\` decorator instruments functions cleanly for Phoenix observability.
+### 3. Decorator Pattern (`observability/tracing/decorators.py`)
+**Why**: Adds cross-cutting concerns like tracing, logging, and metrics without modifying core business logic. The `@trace_span` decorator instruments functions cleanly for Phoenix observability.
 
-### 4. Strategy Pattern (\`core/graphrag.py\`)
-**Why**: Allows switching between different RAG strategies (e.g., with/without Neo4j graph expansion, different retrieval methods) at runtime based on configuration flags like \`USE_NEO4J\`.
+### 4. Strategy Pattern (`core/graphrag.py`)
+**Why**: Allows switching between different RAG strategies (e.g., with/without Neo4j graph expansion, different retrieval methods) at runtime based on configuration flags like `USE_NEO4J`.
 
-### 5. Pipeline Pattern (Knowledge Graph Build: \`graph_indexing/kgbuild/\`)
+### 5. Pipeline Pattern (Knowledge Graph Build: `graph_indexing/kgbuild/`)
 **Why**: Breaks down complex knowledge graph extraction into sequential stages (parse, extract, transform, load). Each stage is independently testable and can be replaced or enhanced.
 
-### 6. Middleware Pattern (\`api/main.py\`)
+### 6. Middleware Pattern (`api/main.py`)
 **Why**: Separates concerns like CORS, rate limiting, and OpenTelemetry instrumentation from core API logic. Middleware runs before/after requests without cluttering route handlers.
 
-### 7. Controller Pattern (\`api/controllers.py\`)
+### 7. Controller Pattern (`api/controllers.py`)
 **Why**: Separates HTTP request/response handling from business logic. Controllers orchestrate services, validate input via Pydantic models, and format responses while keeping routes thin and testable.
 
-### 8. Semantic Caching (\`core/retrieval.py\` - \`semantic_cache\` collection)
+### 8. Semantic Caching (`core/retrieval.py` - `semantic_cache` collection)
 **Why**: Reduces LLM API costs and latency by caching semantically similar queries. Uses vector similarity instead of exact string matching, improving cache hit rates for paraphrased questions.
 
 ### 9. Dependency Injection (FastAPI's native DI)
@@ -684,86 +618,6 @@ This selection focuses on FastAPI's core architecture, routing mechanisms, depen
 - **Open/Closed Principle**: System is open for extension (new retrieval strategies) but closed for modification (existing code stays stable)
 
 ---
-
-## Technology Selection and Trade-offs
-
-### Design Philosophy
-The project was built with a focus on simplicity, accessibility, and open-source tooling. The goal was to avoid complex containerization (Docker/WSL) and keep the setup as straightforward as possible using only pip-installable packages.
-
-### Python Version: 3.10
-**Why 3.10 specifically?** The LangChain ecosystem works most reliably with Python 3.10. While newer versions (3.11, 3.12+) offer performance improvements, they introduce compatibility issues with key LangChain dependencies, vector stores, and embedding libraries.
-
-### Knowledge Graph Extraction: tree-sitter + libcst
-Before settling on this combination, several alternatives were evaluated:
-
-**Bevel Software Framework**
-- Pros: Purpose-built for code analysis and knowledge graph extraction
-- Cons: PyPI version deprecated; current version rewritten in Rust (not pip-installable)
-- Decision: Incompatible with our Python-only, pip-friendly requirement
-
-**GraphSitter by Codegen**
-- Pros: Direct codebase to Neo4j visualization; elegant single-step solution
-- Cons: Requires Python 3.12+ which conflicts with LangChain's optimal runtime (Python 3.10)
-- Decision: Version compatibility issues would introduce fragility across the entire stack
-
-**tree-sitter + libcst (Final Choice)**
-- Pros: 
-  - Both pip-installable and well-maintained
-  - Compatible with Python 3.10
-  - tree-sitter handles fast incremental parsing
-  - libcst provides full concrete syntax tree analysis
-  - Complementary strengths (speed + detail)
-- Cons: Requires custom extraction logic in \`graph_indexing/kgbuild/\`
-- Decision: Worth the implementation effort for stability and compatibility
-
-### No Docker/WSL Requirement
-All services (FastAPI, ChromaDB, Phoenix) run natively on Windows/Linux/macOS without containers. This reduces setup friction and makes the system more accessible for development and experimentation.
-
----
-
-## Known Limitations and Constraints
-
-### 1. Python Version Dependency
-- **Limitation**: Locked to Python 3.10 for LangChain compatibility
-- **Impact**: Cannot leverage performance improvements in Python 3.11+ (faster startup, better error messages)
-- **Workaround**: Monitor LangChain updates for future Python 3.11/3.12 support
-
-### 2. Code Analysis Scope
-- **Limitation**: tree-sitter and libcst only parse Python syntax; don't understand runtime behavior
-- **Impact**: 
-  - Cannot detect dynamic imports, eval(), or runtime-generated code
-  - Misses relationships established through metaprogramming or decorators
-  - May not capture all call relationships in highly dynamic codebases
-- **Workaround**: Manual annotation or hybrid static+dynamic analysis for critical paths
-
-### 3. Embedding Model Constraints
-- **Limitation**: BAAI/bge-small-en-v1.5 generates 384-dimensional embeddings
-- **Impact**: 
-  - Lower dimensionality than larger models (e.g., OpenAI ada-002: 1536-dim)
-  - May miss nuanced semantic relationships in highly technical or domain-specific code
-  - English-only; limited multilingual support
-- **Workaround**: Can swap for bge-large-en-v1.5 (1024-dim) or multilingual variants at the cost of speed
-
-### 4. LLM Context Window
-- **Limitation**: gpt-oss-120b context window size limits retrieved context
-- **Impact**: 
-  - Cannot fit entire large codebases in a single query
-  - May truncate retrieved context if too many chunks/nodes are returned
-  - Long conversations may lose early context
-- **Workaround**: Implement sliding window context management or hierarchical summarization
-
-### 5. ChromaDB Scalability
-- **Limitation**: Embedded ChromaDB not optimized for multi-user production workloads
-- **Impact**:
-  - Single-threaded writes may bottleneck during bulk indexing
-  - No built-in clustering or horizontal scaling
-  - Limited to single-machine memory constraints
-- **Workaround**: Migrate to ChromaDB client-server mode or consider Pinecone/Weaviate for production
-
-### 6. Neo4j Aura Free Tier Constraints
-- **Limitation**: Free tier has storage limits (around 200MB) and connection restrictions
-- **Impact**:
-  - May not be able to store the entire knowledge graph for very large codebases
   - Connection limits could affect performance under heavy load
 - **Workaround**: Upgrade to a paid Neo4j Aura plan for larger projects
 
@@ -1149,8 +1003,8 @@ Use Neo4j Aura (managed cloud) to provision credentials for graph features.
    \`\`\`
 
 **Notes:**
-- The importer in \`core/loadneo.py\` uses \`apoc.create.relationship\`. Aura includes APOC Core; if your plan lacks that procedure, replace with standard \`MERGE\` relationship creation.
-- The SOLID pipeline respects \`USE_NEO4J\` via env (\`config/settings.py\`). The LCEL pipeline toggles Neo4j neighbors with a code flag in \`core/graphrag.py\`.
+- The importer in `core/loadneo.py` uses `apoc.create.relationship`. Aura includes APOC Core; if your plan lacks that procedure, replace with standard `MERGE` relationship creation.
+- The SOLID pipeline respects `USE_NEO4J` via env (`config/settings.py`). The LCEL pipeline toggles Neo4j neighbors with a code flag in `core/graphrag.py`.
 
 ---
 
@@ -1227,6 +1081,7 @@ python chunker.py
             // Move TOC to after the introduction section (before the first h2)
             const firstH2 = contentDiv.querySelector('h2');
             const tocElement = document.getElementById('table-of-contents');
+            
             if (firstH2 && tocElement) {
                 contentDiv.insertBefore(tocElement, firstH2);
             }

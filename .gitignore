@@ -1,5 +1,6 @@
 bien/
 __pycache__/
+config/myapikeys.py
 *.pyc
 *.pyo
 *.pyd

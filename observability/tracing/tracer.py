@@ -12,6 +12,8 @@ from typing import Optional
 
 from opentelemetry import trace
 from phoenix.otel import register
+from urllib.parse import urlparse
+import socket
 
 
 # You can override these via environment variables if you like.
@@ -43,13 +45,28 @@ if not _endpoint:
     else:
         _endpoint = "http://localhost:6006/v1/traces"
 
-tracer_provider = register(
-    project_name=os.getenv("PHOENIX_PROJECT_NAME", _DEFAULT_PROJECT_NAME),
-    endpoint=_endpoint,
-    protocol=_protocol,
-    auto_instrument=False,
-    batch=False,
-)
+def _can_connect(endpoint: str) -> bool:
+    try:
+        parsed = urlparse(endpoint)
+        host = parsed.hostname or "localhost"
+        port = parsed.port or (4317 if _protocol == "grpc" else 80)
+        with socket.create_connection((host, port), timeout=0.8):
+            return True
+    except Exception:
+        return False
+
+_enabled_env = os.getenv("PHOENIX_ENABLED", "1").lower()
+_enabled = _enabled_env not in ("0", "false", "no")
+
+tracer_provider = None
+if _enabled and _can_connect(_endpoint):
+    tracer_provider = register(
+        project_name=os.getenv("PHOENIX_PROJECT_NAME", _DEFAULT_PROJECT_NAME),
+        endpoint=_endpoint,
+        protocol=_protocol,
+        auto_instrument=False,
+        batch=False,
+    )
 
 
 def get_tracer(name: Optional[str] = None) -> trace.Tracer:
