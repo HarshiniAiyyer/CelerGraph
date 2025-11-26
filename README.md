@@ -284,125 +284,31 @@ Notes:
 </p>
 
 ### Overall Components
-
-```mermaid
-graph TD
-  FE[Frontend (Vite/React)] -- HTTP --> API[FastAPI API]
-  API -- CORS + RateLimit --> MW[Middlewares]
-  API -- OpenAPI --> Docs[Swagger/ReDoc]
-  API --> Ctrl[Controllers]
-  Ctrl --> RAG[GraphRAG Pipeline]
-  RAG --> CH[ChromaDB]
-  RAG -. optional .-> N4J[Neo4j]
-  RAG --> LLM[Groq LLM]
-  RAG --> Cache[Semantic Cache]
-  Obs[Phoenix + OTEL] <-- Spans/Metrics --> API
-  Obs <-- Spans/Metrics --> RAG
-  subgraph Storage
-    CH
-    Cache
-  end
-```
+<p align="center">
+  <img src="assets/components.png" alt="Logo" width="200">
+</p>
 
 ### RAG Request Flow
 
-```mermaid
-sequenceDiagram
-  participant U as User
-  participant FE as Frontend (React)
-  participant API as FastAPI Router
-  participant CC as ChatController
-  participant RAG as GraphRAG
-  participant CH as ChromaDB
-  participant N4J as Neo4j (optional)
-  participant LLM as Groq LLM
-  participant SC as SemanticCache
-
-  U->>FE: Enter question
-  FE->>API: POST /api/chat
-  API->>CC: Route to controller
-  CC->>RAG: answer_question(q)
-  alt Cache enabled
-    RAG->>SC: lookup(q)
-    SC-->>RAG: hit/miss
-  end
-  par Parallel retrieval
-    RAG->>CH: query node_embeddings
-    RAG->>CH: query code_chunks
-  end
-  opt Neo4j neighbors
-    RAG->>N4J: expand neighbors(ids)
-    N4J-->>RAG: neighbor IDs
-  end
-  RAG->>LLM: Prompt with built context
-  LLM-->>RAG: Answer text
-  RAG->>SC: store(q, answer, refs)
-  RAG-->>CC: {answer, references}
-  CC-->>FE: JSON response
-  FE-->>U: Render with citations
-```
+<p align="center">
+  <img src="assets/rag_request.png" alt="Logo" width="200">
+</p>
 
 ### Knowledge Graph Build Pipeline
 
-```mermaid
-flowchart LR
-  SRC[Python source files] --> CST[LibCST parse]
-  CST --> EX[PyExtract visitor]
-  EX --> KGNodes[Nodes: module/class/function]
-  EX --> KGEdges[Edges: CONTAINS/CALLS/IMPORTS/INHERITS]
-  KGNodes --> JSON[knowledge_graph.json]
-  KGEdges --> JSON
-  TS[Tree-sitter (optional)] --> KGNodes
-  JSON -->|batch import| N4J[(Neo4j)]
-```
+<p align="center">
+  <img src="assets/kg.png" alt="Logo" width="200">
+</p>
 
 ### Data Stores (Chroma Collections)
 
-```mermaid
-flowchart TB
-  subgraph ChromaDB
-    CE[code_chunks]
-    NE[node_embeddings]
-    SC[semantic_cache]
-  end
+<p align="center">
+  <img src="assets/chroma.png" alt="Logo" width="200">
+</p>
 
-  CE -->|documents: chunk text| UI1[Used in retrieval]
-  NE -->|documents: node text| UI2[Used in retrieval]
-  SC -->|metadatas: answer + references_json| UI3[Cache hit returns formatted answer]
-```
-
-### Observability / Tracing
-
-```mermaid
-sequenceDiagram
-  participant API as FastAPI
-  participant OTEL as OpenTelemetry
-  participant PH as Phoenix
-  participant RAG as RAG Functions
-
-  API->>OTEL: instrument_fastapi(app)
-  OTEL->>PH: register tracer provider
-  RAG->>OTEL: trace_span("rag.*")
-  RAG->>OTEL: record_retrieval_metrics()
-  RAG->>OTEL: record_generation_metrics()
-  OTEL->>PH: export spans + attributes
-```
 
 ### Streaming Chat Flow
 
-```mermaid
-sequenceDiagram
-  participant FE as Frontend
-  participant API as /api/chat/stream
-  participant CC as ChatStreamController
-  participant RAG as rag_chain.stream()
-
-  FE->>API: POST /api/chat/stream
-  API->>CC: start stream
-  CC->>RAG: stream(question)
-  loop chunks
-    RAG-->>CC: token(s)
-    CC-->>FE: write chunk
-    FE->>FE: append to UI
-  end
-```
+<p align="center">
+  <img src="assets/streaming.png" alt="Logo" width="200">
+</p>
