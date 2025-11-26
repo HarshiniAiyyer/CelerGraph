@@ -1,7 +1,5 @@
-# <p align="center">CELERGRAPH.</p>
-
-<p align="center">
-  <img src="assets/logo.jpg" alt="Logo" width="200">
+# <p align="center">
+  <img src="assets/logo.jpg" alt="Logo" width="500">
 </p>
 
 
