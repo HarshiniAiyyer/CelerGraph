@@ -8,6 +8,9 @@ You may find the detailed documentation to this app [HERE (CLICK ME!)]
 
 -- If this link isnt working for you, you may use the ```detailed.md``` file. 
 
+## App Landing Page
+<p align="center"> <img src="assets/frontpage.png" alt="Logo" width="500"> </p>
+
 ## Quick Setup (Virtual Environment)
 
 Use a Python virtual environment to isolate dependencies.
