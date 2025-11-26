@@ -8,8 +8,8 @@ You may find the detailed documentation in the ```detailed.md``` file.
 
 Documentation website is in progress. 
 
-## App Landing Page
-<p align="center"> <img src="assets/frontpage.png" alt="Logo" width="500"> </p>
+## App Preview
+<p align="center"> <img src="assets/celer.gif" alt="GIF" width="500"> </p>
 
 ## Quick Setup (Virtual Environment)
 
