@@ -563,42 +563,43 @@ The system consists of three main services:
 
 ### Architecture Diagrams
 
-#### System Overview Diagram
+#### System Overview
+
 ```mermaid
-flowchart LR
+graph LR
   subgraph Client
-    U[User]
-    FE[Web UI]
+    U[👤 User]
+    FE[⚛️ Web UI (React/Vite)]
   end
 
   subgraph Backend
-    API[FastAPI]
-    RL[RateLimit Middleware]
-    CORS[CORS]
-    Routes[API Routes]
-    Ctrl[Controllers]
-    RAG[GraphRAG Pipeline]
+    API[🚀 FastAPI]
+    RL[⏱️ RateLimit Middleware]
+    CORS[🔒 CORS]
+    Routes[🧭 API Routes]
+    Ctrl[🎛️ Controllers]
+    RAG[🧠 GraphRAG Pipeline]
   end
 
   subgraph Storage
-    CH[ChromaDB]
-    CE[code_chunks]
-    NE[node_embeddings]
-    SC[semantic_cache]
+    CH[(💽 ChromaDB)]
+    CE[📄 code_chunks]
+    NE[🧬 node_embeddings]
+    SC[🗂️ semantic_cache]
   end
 
   subgraph Graph
-    N4J[Neo4j]
+    N4J[(🕸️ Neo4j)]
   end
 
   subgraph LLM
-    Groq[Groq LLM]
+    Groq[🤖 Groq LLM]
   end
 
   subgraph Observability
-    OTEL[OpenTelemetry]
-    PH[Phoenix]
-    Log[JSON Logger]
+    OTEL[🛰️ OpenTelemetry]
+    PH[🔥 Phoenix]
+    Log[🧾 JSON Logger]
   end
 
   U --> FE
@@ -622,9 +623,10 @@ flowchart LR
 ```
 
 #### Overall Components
+
 ```mermaid
-flowchart TD
-  FE[Frontend] -- HTTP --> API[FastAPI API]
+graph TD
+  FE[Frontend (Vite/React)] -- HTTP --> API[FastAPI API]
   API -- CORS + RateLimit --> MW[Middlewares]
   API -- OpenAPI --> Docs[Swagger/ReDoc]
   API --> Ctrl[Controllers]
@@ -642,10 +644,11 @@ flowchart TD
 ```
 
 #### RAG Request Flow
+
 ```mermaid
 sequenceDiagram
   participant U as User
-  participant FE as Frontend
+  participant FE as Frontend (React)
   participant API as FastAPI Router
   participant CC as ChatController
   participant RAG as GraphRAG
@@ -679,6 +682,7 @@ sequenceDiagram
 ```
 
 #### Knowledge Graph Build Pipeline
+
 ```mermaid
 flowchart LR
   SRC[Python source files] --> CST[LibCST parse]
@@ -687,11 +691,12 @@ flowchart LR
   EX --> KGEdges[Edges: CONTAINS/CALLS/IMPORTS/INHERITS]
   KGNodes --> JSON[knowledge_graph.json]
   KGEdges --> JSON
-  TS[Tree-sitter optional] --> KGNodes
-  JSON -->|batch import| N4J[Neo4j]
+  TS[Tree-sitter (optional)] --> KGNodes
+  JSON -->|batch import| N4J[(Neo4j)]
 ```
 
 #### Data Stores (Chroma Collections)
+
 ```mermaid
 flowchart TB
   subgraph ChromaDB
@@ -705,23 +710,8 @@ flowchart TB
   SC -->|metadatas: answer + references_json| UI3[Cache hit returns formatted answer]
 ```
 
-#### Observability / Tracing
-```mermaid
-sequenceDiagram
-  participant API as FastAPI
-  participant OTEL as OpenTelemetry
-  participant PH as Phoenix
-  participant RAG as RAG Functions
-
-  API->>OTEL: instrument_fastapi(app)
-  OTEL->>PH: register tracer provider
-  RAG->>OTEL: trace_span("rag.*")
-  RAG->>OTEL: record_retrieval_metrics()
-  RAG->>OTEL: record_generation_metrics()
-  OTEL->>PH: export spans + attributes
-```
-
 #### Streaming Chat Flow
+
 ```mermaid
 sequenceDiagram
   participant FE as Frontend
@@ -738,6 +728,7 @@ sequenceDiagram
     FE->>FE: append to UI
   end
 ```
+
 
 ---
 
