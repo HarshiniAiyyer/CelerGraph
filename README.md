@@ -6,6 +6,8 @@ This guide documents the complete workflow for setting up and running the Knowle
 ## Documentation
 You may find the detailed documentation to this app [HERE (CLICK ME!)]
 
+-- If this link isnt working for you, you may use the ```detailed.md``` file. 
+
 ## Quick Setup (Virtual Environment)
 
 Use a Python virtual environment to isolate dependencies.
