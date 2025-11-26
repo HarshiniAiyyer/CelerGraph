@@ -1,9 +1,10 @@
-# <p align="center">
-  <img src="assets/logo.jpg" alt="Logo" width="500">
-</p>
+<p align="center"> <img src="assets/logo.jpg" alt="Logo" width="500"> </p>
 
-
+\
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
+
+## Documentation
+You may find the detailed documentation to this app [HERE (CLICK ME!)]
 
 ## Quick Setup (Virtual Environment)
 
@@ -278,35 +279,35 @@ Notes:
 ### System Overview
 
 <p align="center">
-  <img src="assets/overview.png" alt="Logo" width="200">
+  <img src="assets/overview.png" alt="Logo" width="1200">
 </p>
 
 ### Overall Components
 <p align="center">
-  <img src="assets/components.png" alt="Logo" width="200">
+  <img src="assets/components.png" alt="Logo" width="800">
 </p>
 
 ### RAG Request Flow
 
 <p align="center">
-  <img src="assets/rag_request.png" alt="Logo" width="200">
+  <img src="assets/rag_request.png" alt="Logo" width="800">
 </p>
 
 ### Knowledge Graph Build Pipeline
 
 <p align="center">
-  <img src="assets/kg.png" alt="Logo" width="200">
+  <img src="assets/kg.png" alt="Logo" width="800">
 </p>
 
 ### Data Stores (Chroma Collections)
 
 <p align="center">
-  <img src="assets/chroma.png" alt="Logo" width="200">
+  <img src="assets/chroma.png" alt="Logo" width="800">
 </p>
 
 
 ### Streaming Chat Flow
 
 <p align="center">
-  <img src="assets/streaming.png" alt="Logo" width="200">
+  <img src="assets/streaming.png" alt="Logo" width="800">
 </p>
