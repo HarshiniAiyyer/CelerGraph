@@ -1,8 +1,8 @@
-# CelerGraph
+# <p align="center">CELERGRAPH.</p>
 
-Celergraph answers all your queries on the FastAPI core database. Finally, something that doesnt make you feel stupid.
-
-![Logo](assets/logo.jpg)
+<p align="center">
+  <img src="assets/logo.jpg" alt="Logo" width="200">
+</p>
 
 
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
@@ -279,62 +279,9 @@ Notes:
 
 ### System Overview
 
-```mermaid
-graph LR
-  subgraph Client
-    U[👤 User]
-    FE[⚛️ Web UI (React/Vite)]
-  end
-
-  subgraph Backend
-    API[🚀 FastAPI]
-    RL[⏱️ RateLimit Middleware]
-    CORS[🔒 CORS]
-    Routes[🧭 API Routes]
-    Ctrl[🎛️ Controllers]
-    RAG[🧠 GraphRAG Pipeline]
-  end
-
-  subgraph Storage
-    CH[(💽 ChromaDB)]
-    CE[📄 code_chunks]
-    NE[🧬 node_embeddings]
-    SC[🗂️ semantic_cache]
-  end
-
-  subgraph Graph
-    N4J[(🕸️ Neo4j)]
-  end
-
-  subgraph LLM
-    Groq[🤖 Groq LLM]
-  end
-
-  subgraph Observability
-    OTEL[🛰️ OpenTelemetry]
-    PH[🔥 Phoenix]
-    Log[🧾 JSON Logger]
-  end
-
-  U --> FE
-  FE -->|HTTP| API
-  API --> RL
-  API --> CORS
-  API --> Routes --> Ctrl --> RAG
-  RAG --> CH
-  CH --> CE
-  CH --> NE
-  CH --> SC
-  RAG -. optional neighbors .-> N4J
-  RAG --> Groq
-  API --> OTEL --> PH
-  RAG --> OTEL
-  API --> Log
-  FE -->|/api/chat| API
-  FE -->|/api/chat/stream| API
-  FE -->|/api/index| API
-  FE -->|/api/cache/clear| API
-```
+<p align="center">
+  <img src="assets/overview.png" alt="Logo" width="200">
+</p>
 
 ### Overall Components
 
