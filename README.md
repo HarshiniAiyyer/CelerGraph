@@ -4,9 +4,12 @@
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
 
 ## Documentation
-You may find the detailed documentation to this app [HERE (CLICK ME!)]
+You may find the detailed documentation in the ```detailed.md``` file. 
 
--- If this link isnt working for you, you may use the ```detailed.md``` file. 
+Documentation website is in progress. 
+
+## App Landing Page
+<p align="center"> <img src="assets/frontpage.png" alt="Logo" width="500"> </p>
 
 ## Quick Setup (Virtual Environment)
 
