@@ -1,4 +1,9 @@
-# CelerGraph Pipeline Execution Guide
+# CelerGraph
+
+Celergraph answers all your queries on the FastAPI core database. Finally, something that doesnt make you feel stupid.
+
+![Logo](assets/logo.jpg)
+
 
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
 
