@@ -1,5 +1,4 @@
 # kgbuild/python_extractor.py
-
 import hashlib
 import logging
 from pathlib import Path

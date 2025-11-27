@@ -267,7 +267,7 @@ d:\inco/
 ### 1. Repository Pattern (`core/retrieval.py`, `core/embeddings.py`)
 **Why**: Abstracts data access logic for ChromaDB and Neo4j, making it easy to swap vector stores or graph databases without changing business logic. Enables clean separation between storage and application layers.
 
-### 2. Factory Pattern (`core/services.py`)
+### 2. Factory Pattern (`core/factories.py`)
 **Why**: Centralizes creation of LLM clients, embedding models, and vector stores. Ensures consistent configuration and makes dependency injection straightforward for testing and observability.
 
 ### 3. Decorator Pattern (`observability/tracing/decorators.py`)
