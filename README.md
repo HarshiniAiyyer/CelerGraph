@@ -1,6 +1,6 @@
 <p align="center"> <img src="assets/logo.jpg" alt="Logo" width="500"> </p>
 
-\
+\\
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
 
 ## Documentation
@@ -20,7 +20,7 @@ Use a Python virtual environment to isolate dependencies.
 ```bash
 # From project root
 python -m venv venv
-.\venv\\Scripts\\Activate.ps1
+.\\venv\\\\Scripts\\\\Activate.ps1
 
 # Upgrade pip
 python -m pip install --upgrade pip
@@ -142,13 +142,13 @@ The FastAPI backend exposes the following documented endpoints. Visit `http://lo
     ```json
     {
       "answer": "...formatted answer with references...",
-      "references": ["[node:...]"]
+      "references": ["[node:..."]
     }
     ```
   - cURL:
     ```bash
-    curl -sS http://localhost:8000/api/chat \
-      -H "Content-Type: application/json" \
+    curl -sS http://localhost:8000/api/chat \\
+      -H "Content-Type: application/json" \\
       -d '{
         "message": "How does routing work?",
         "max_tokens": 800,
@@ -242,7 +242,7 @@ Use Neo4j Aura (managed cloud) to provision credentials for graph features.
 
 Notes:
 - The importer in `core/loadneo.py` uses `apoc.create.relationship`. Aura includes APOC Core; if your plan lacks that procedure, replace with standard `MERGE` relationship creation.
-- The SOLID pipeline respects `USE_NEO4J` via env (`config/settings.py`). The LCEL pipeline toggles Neo4j neighbors with a code flag in `core/graphrag.py`.
+- The SOLID pipeline respects `USE_NEO4J` via env (`config/settings.py`). The LCEL pipeline toggles Neo4j neighbors with a code flag in `core/graphrag.py`
 
 ## Troubleshooting
 
@@ -316,3 +316,142 @@ Notes:
 <p align="center">
   <img src="assets/streaming.png" alt="Logo" width="800">
 </p>
+
+## Project Structure
+
+```
+d:\inco/
+├── api/
+│   ├── __init__.py
+│   ├── controllers.py
+│   ├── main.py
+│   ├── models.py
+│   └── routes.py
+├── assets/
+│   ├── chroma.png
+│   ├── components.png
+│   ├── frontpage.png
+│   ├── kg.png
+│   ├── logo.jpg
+│   ├── logo.png
+│   ├── overview.png
+│   ├── rag_request.png
+│   └── streaming.png
+├── config/
+│   ├── logger.py
+│   └── settings.py
+├── core/
+│   ├── __init__.py
+│   ├── chroma_setup.py
+│   ├── chunker.py
+│   ├── code_exceptions.py
+│   ├── container.py
+│   ├── embed_nodes.py
+│   ├── embeddings.py
+│   ├── factories.py
+│   ├── graphrag.py
+│   ├── graphrag_solid.py
+│   ├── interfaces.py
+│   ├── loadneo.py
+│   ├── ratelimit.py
+│   ├── retrieval.py
+│   ├── semantic_cache.py
+│   └── services.py
+├── frontend/
+│   ├── public/
+│   │   └── favicon.ico
+│   ├── scripts/
+│   │   └── smoke-chat.js
+│   ├── src/
+│   │   ├── GraphRAGChat.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── graph_indexing/
+│   ├── kgbuild/
+│   │   ├── __init__.py
+│   │   ├── graph.py
+│   │   ├── python_extractor.py
+│   │   ├── runner.py
+│   │   └── treesitter_extractor.py
+│   ├── knowledge_graph.json
+│   └── sample.cypher
+├── infos/
+│   ├── dependencies/
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── utils.py
+│   ├── openapi/
+│   │   ├── __init__.py
+│   │   ├── constants.py
+│   │   ├── docs.py
+│   │   ├── models.py
+│   │   └── utils.py
+│   ├── __init__.py
+│   ├── applications.py
+│   ├── background.py
+│   ├── concurrency.py
+│   ├── datastructures.py
+│   ├── encoders.py
+│   ├── exception_handlers.py
+│   ├── exceptions.py
+│   ├── param_functions.py
+│   ├── params.py
+│   ├── responses.py
+│   ├── routing.py
+│   ├── temp_pydantic_v1_params.py
+│   ├── testclient.py
+│   ├── types.py
+│   └── utils.py
+├── observability/
+│   ├── logging/
+│   │   ├── __init__.py
+│   │   └── json_logger.py
+│   ├── rag/
+│   │   ├── __init__.py
+│   │   ├── rag_events.py
+│   │   └── rag_metrics.py
+│   ├── tracing/
+│   │   ├── __init__.py
+│   │   ├── fastapi_middleware.py
+│   │   ├── instrumentation.py
+│   │   └── tracer.py
+│   └── start_phoenix.py
+├── scripts/
+│   └── test_api.py
+├── t_for_testing/
+│   ├── chroma_db_unit/
+│   │   ├── 35dae82b-2279-45f3-8d49-0d112e718b84/
+│   │   │   ├── data_level0.bin
+│   │   │   ├── header.bin
+│   │   │   ├── length.bin
+│   │   │   └── link_lists.bin
+│   │   └── chroma.sqlite3
+│   ├── integration/
+│   │   ├── test_api.py
+│   │   ├── test_rate_limit.py
+│   │   └── test_stream.py
+│   ├── unit/
+│   │   └── test_services.py
+│   ├── README_tests.txt
+│   ├── temp_question.json
+│   ├── test.py
+│   └── test_frontend.html
+├── .env.example
+├── .gitignore
+├── CONFIGURATION.md
+├── README.md
+├── detailed.html
+├── detailed.md
+├── envins.txt
+├── pyproject.toml
+├── requirements.txt
+├── run_all.bat
+├── samplequestions.txt
+└── start-dev.bat
+```
