@@ -4,7 +4,7 @@ from api.models import (
     HealthResponse, CacheResponse
 )
 from core.container import get_container
-from core.graphrag import answer_question, clear_cache
+from core.graphrag import answer_question, clear_cache, summarize_question
 from core.graphrag import stream_answer
 from core.chunker import ingest_folder
 import chromadb
@@ -50,10 +50,20 @@ class ChatHistoryController:
 
     @trace_span("rag.history.add")
     def add_history(self, item: Dict):
+        # Summarize title if it's the raw question
+        title = item.get("title", "")
+        # Heuristic: if title is long (> 30 chars) or looks like a question, summarize it
+        if len(title) > 30 or "?" in title:
+            try:
+                summary = summarize_question(title)
+                item["title"] = summary
+            except Exception:
+                pass # Keep original if summarization fails
+        
         history = load_chat_history()
         history.append(item)
         save_chat_history(history)
-        return {"status": "ok"}
+        return item
 
 
 # --------------------------

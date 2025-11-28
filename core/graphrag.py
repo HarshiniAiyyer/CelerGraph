@@ -427,6 +427,22 @@ def is_greeting(question: str) -> bool:
     question_lower = question.strip().lower()
     return any(greeting in question_lower for greeting in greetings)
 
+def summarize_question(question: str) -> str:
+    """Summarize a question into a short 3-5 word title."""
+    try:
+        log.info(f"Summarizing question: {question[:50]}...")
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", "You are a helpful assistant. Summarize the following question into a short, concise title of 3-5 words. Do not use quotes."),
+            ("human", "{question}")
+        ])
+        chain = prompt | llm | StrOutputParser()
+        summary = chain.invoke({"question": question})
+        return summary.strip().strip('"')
+    except Exception as e:
+        log.error(f"Failed to summarize question: {e}")
+        return question # Fallback to original question
+
+
 def direct_llm_answer(question: str, llm_overrides: Optional[Dict[str, Any]] = None) -> str:
     """Get a direct answer from the LLM without using knowledge graph."""
     try:

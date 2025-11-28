@@ -247,17 +247,35 @@ const ChatInterface = ({ onLogout }) => {
   });
 
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: "I'm connected to the FastAPI knowledge graph. Ask me anything about the FastAPI codebase.",
-      hasGraph: false,
-      graphNodes: []
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Fetch history on mount
+  useEffect(() => {
+    const fetchHistory = async () => {
+      console.log('DEBUG: Fetching history from', `${API_BASE}/history`);
+      try {
+        const res = await fetch(`${API_BASE}/history`);
+        console.log('DEBUG: History fetch status:', res.status);
+        if (res.ok) {
+          const data = await res.json();
+          console.log('DEBUG: History data received:', data);
+          if (Array.isArray(data)) {
+            setHistory(data.reverse());
+          } else {
+            console.error('DEBUG: History data is not an array:', data);
+            setHistory([]);
+          }
+        } else {
+          console.error('DEBUG: History fetch failed:', res.statusText);
+        }
+      } catch (err) {
+        console.error("DEBUG: Failed to load history:", err);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -331,18 +349,29 @@ const ChatInterface = ({ onLogout }) => {
 
       // 3. Stream the GraphRAG response to UI incrementally
       const assistantId = Date.now() + 1;
-      setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '', hasGraph: false, graphNodes: [] }]);
+      // Note: We do NOT add the message here yet. We wait for the first chunk.
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let accumulated = '';
+      let isFirstChunk = true;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+
         const chunk = decoder.decode(value, { stream: true });
         accumulated += chunk;
-        setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m));
+
+        if (isFirstChunk) {
+          // On first chunk: Hide typing indicator AND add the message
+          setIsTyping(false);
+          setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: accumulated, hasGraph: false, graphNodes: [] }]);
+          isFirstChunk = false;
+        } else {
+          // On subsequent chunks: Update the existing message
+          setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m));
+        }
       }
 
       // Try to parse accumulated as JSON
@@ -366,10 +395,25 @@ const ChatInterface = ({ onLogout }) => {
 
       if (hasKGCitations) {
         console.log('DEBUG: Saving history for:', userMsg.content);
-        const newHistoryItem = { id: Date.now(), title: userMsg.content, date: 'Today' };
+        // Save full conversation
+        const conversation = [
+          userMsg,
+          { id: assistantId, role: 'assistant', content: answerText, hasGraph: hasKGCitations, graphNodes: [] }
+        ];
+        const newHistoryItem = { id: Date.now(), title: userMsg.content, date: 'Today', conversation };
+
         setHistory(prev => [newHistoryItem, ...prev]);
         try {
-          await fetch(`${API_BASE}/history`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newHistoryItem) });
+          const historyRes = await fetch(`${API_BASE}/history`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newHistoryItem)
+          });
+          if (historyRes.ok) {
+            const savedItem = await historyRes.json();
+            // Update the item in the list with the summarized title from backend
+            setHistory(prev => prev.map(item => item.id === newHistoryItem.id ? savedItem : item));
+          }
         } catch (historyError) {
           console.error('handleSend: Error saving history:', historyError);
         }
@@ -388,6 +432,22 @@ const ChatInterface = ({ onLogout }) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    }
+  };
+
+  // Load a history session
+  const loadHistorySession = (item) => {
+    if (item.conversation) {
+      setMessages(item.conversation);
+    } else {
+      // Fallback for old items without conversation data
+      setMessages([
+        { id: Date.now(), role: 'user', content: item.title },
+        { id: Date.now() + 1, role: 'assistant', content: "This is an old history item without saved content." }
+      ]);
+    }
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false); // Close sidebar on mobile
     }
   };
 
@@ -441,6 +501,7 @@ const ChatInterface = ({ onLogout }) => {
             {history.map((item) => (
               <div key={item.id} className="relative group">
                 <button
+                  onClick={() => loadHistorySession(item)}
                   className="flex w-full flex-col items-start border border-transparent p-2 pr-8 text-left text-sm transition-all hover:border-[#01012b] hover:bg-white"
                 >
                   <span className="font-medium truncate w-full text-[#01012b]">{item.title}</span>
