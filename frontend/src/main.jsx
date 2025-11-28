@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api';
-import { 
-  MessageSquare, 
-  Send, 
-  Menu, 
-  Plus, 
-  Search, 
-  Share2, 
-  MoreVertical, 
-  Cpu, 
-  Network, 
+import {
+  MessageSquare,
+  Send,
+  Menu,
+  Plus,
+  Search,
+  Share2,
+  MoreVertical,
+  Cpu,
+  Network,
   X,
   Database,
   ChevronRight,
@@ -96,13 +96,13 @@ const ConfirmationModal = ({ isOpen, title, message, onConfirm, onCancel }) => {
         <h3 className="mb-2 text-xl font-black uppercase tracking-tight text-[#01012b]">{title}</h3>
         <p className="mb-6 text-sm font-medium text-gray-600">{message}</p>
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={onConfirm}
             className="flex-1 border-2 border-[#01012b] bg-[#ff4400] py-3 text-sm font-bold text-white shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:border-[#01012b] transition-all"
           >
             YES
           </button>
-          <button 
+          <button
             onClick={onCancel}
             className="flex-1 border-2 border-[#01012b] bg-white py-3 text-sm font-bold text-[#01012b] shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:bg-gray-50 transition-all"
           >
@@ -121,23 +121,23 @@ const LandingPage = ({ onGetStarted }) => {
   return (
     <div className="relative flex flex-col min-h-screen w-full bg-[#f0f0f0] font-sans text-gray-900 selection:bg-[#01012b] selection:text-white overflow-x-hidden">
       <NoiseOverlay />
-      
+
       {/* Navigation */}
       <nav className="relative z-10 flex h-20 items-center justify-between border-b-2 border-[#01012b] bg-white px-6 md:px-12">
         <div className="flex items-center gap-2 font-black tracking-tighter text-2xl text-[#01012b]">
           <Database className="h-8 w-8" />
           <span>CELERGRAPH</span>
         </div>
-        
+
         <div className="flex items-center gap-6">
           <span className="hidden md:flex items-center text-base mr-6 font-bold tracking-widest uppercase text-[#01012b]">
-            Made with 
+            Made with
             <span className="relative flex items-center justify-center mx-3">
-               <span className="absolute inline-flex h-full w-full animate-ping opacity-75 text-[#ff4400] text-3xl">♥</span>
-               <span className="relative inline-flex text-[#ff4400] text-3xl">♥</span>
+              <span className="absolute inline-flex h-full w-full animate-ping opacity-75 text-[#ff4400] text-3xl">♥</span>
+              <span className="relative inline-flex text-[#ff4400] text-3xl">♥</span>
             </span>
           </span>
-          <button 
+          <button
             onClick={onGetStarted}
             className="flex items-center gap-2 border-2 border-[#01012b] bg-white px-6 py-2 font-bold text-[#01012b] hover:bg-[#01012b] hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
           >
@@ -148,9 +148,9 @@ const LandingPage = ({ onGetStarted }) => {
 
       {/* Hero Section */}
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-20 text-center">
-        
+
         <div className="mb-6 inline-flex items-center gap-2 border-2 border-[#01012b] bg-white px-4 py-1 text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(1,1,43,0.2)] text-[#01012b]">
-           <span className="relative flex h-2 w-2">
+          <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
           </span>
@@ -170,7 +170,7 @@ const LandingPage = ({ onGetStarted }) => {
 
         {/* Button */}
         <div className="mt-12 flex flex-col items-center sm:flex-row">
-          <button 
+          <button
             onClick={onGetStarted}
             className="group relative flex h-16 w-auto px-12 items-center justify-center gap-3 border-2 border-[#01012b] bg-[#ff4400] text-lg font-black text-white shadow-[6px_6px_0px_0px_rgba(1,1,43,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:border-[#01012b]"
           >
@@ -198,33 +198,33 @@ const LandingPage = ({ onGetStarted }) => {
 
         {/* Footer Logos */}
         <div className="mt-24 w-full border-t-2 border-[#01012b] bg-white py-12">
-           <p className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-400">Powered by Open Source</p>
-           <div className="flex flex-wrap justify-center gap-12 opacity-80 grayscale items-center">
-             {/* FastAPI */}
-             <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" alt="FastAPI" className="h-10 w-auto object-contain" />
-             
-             {/* Pydantic - Specific User URL */}
-             <img src="https://miro.medium.com/v2/resize:fit:828/format:webp/1*YLYkLm1b72efjOtV-W7gfw.jpeg" alt="Pydantic" className="h-8 w-auto object-contain" />
-             
-             {/* Neo4j - Specific User URL */}
-             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png" alt="Neo4j" className="h-8 w-auto object-contain" />
+          <p className="mb-8 text-xs font-bold uppercase tracking-[0.2em] text-gray-400">Powered by Open Source</p>
+          <div className="flex flex-wrap justify-center gap-12 opacity-80 grayscale items-center">
+            {/* FastAPI */}
+            <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" alt="FastAPI" className="h-10 w-auto object-contain" />
 
-             {/* LangChain */}
-             <div className="flex items-center gap-2">
-                <img src="https://avatars.githubusercontent.com/u/126733545?v=4" alt="LangChain" className="h-8 w-8 rounded-full" />
-                <span className="text-xl font-bold tracking-tight text-[#01012b]">LangChain</span>
-             </div>
+            {/* Pydantic - Specific User URL */}
+            <img src="https://miro.medium.com/v2/resize:fit:828/format:webp/1*YLYkLm1b72efjOtV-W7gfw.jpeg" alt="Pydantic" className="h-8 w-auto object-contain" />
 
-             {/* Tree-sitter */}
-             <img src="https://tree-sitter.github.io/tree-sitter/assets/images/tree-sitter-small.png" alt="Tree-sitter" className="h-10 w-auto object-contain" />
-           </div>
-           
-           {/* Copyright Footer */}
-           <div className="mt-16 border-t border-[#01012b]/10 pt-8">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-[#01012b]">
-               Created by Harshini @ 2025 <span className="mx-2 text-[#ff4400]">•</span> All Rights Reserved
-             </p>
-           </div>
+            {/* Neo4j - Specific User URL */}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Neo4j-logo_color.png" alt="Neo4j" className="h-8 w-auto object-contain" />
+
+            {/* LangChain */}
+            <div className="flex items-center gap-2">
+              <img src="https://avatars.githubusercontent.com/u/126733545?v=4" alt="LangChain" className="h-8 w-8 rounded-full" />
+              <span className="text-xl font-bold tracking-tight text-[#01012b]">LangChain</span>
+            </div>
+
+            {/* Tree-sitter */}
+            <img src="https://tree-sitter.github.io/tree-sitter/assets/images/tree-sitter-small.png" alt="Tree-sitter" className="h-10 w-auto object-contain" />
+          </div>
+
+          {/* Copyright Footer */}
+          <div className="mt-16 border-t border-[#01012b]/10 pt-8">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#01012b]">
+              Created by Harshini @ 2025 <span className="mx-2 text-[#ff4400]">•</span> All Rights Reserved
+            </p>
+          </div>
         </div>
       </main>
     </div>
@@ -238,20 +238,20 @@ const ChatInterface = ({ onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [history, setHistory] = useState(INITIAL_HISTORY);
   const [activeMenuId, setActiveMenuId] = useState(null);
-  
+
   // Modal State
-  const [modalConfig, setModalConfig] = useState({ 
-    isOpen: false, 
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
     type: null, // 'single' or 'all'
-    itemId: null 
+    itemId: null
   });
 
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
-    { 
-      id: 'welcome', 
-      role: 'assistant', 
-      content: "I'm connected to the FastAPI knowledge graph. Ask me anything about the FastAPI codebase.", 
+    {
+      id: 'welcome',
+      role: 'assistant',
+      content: "I'm connected to the FastAPI knowledge graph. Ask me anything about the FastAPI codebase.",
       hasGraph: false,
       graphNodes: []
     }
@@ -289,7 +289,7 @@ const ChatInterface = ({ onLogout }) => {
       setHistory(prev => prev.filter(item => item.id !== modalConfig.itemId));
     } else if (modalConfig.type === 'all') {
       setHistory([]);
-      try { await fetch(`${API_BASE}/cache/clear`, { method: 'POST' }); } catch {}
+      try { await fetch(`${API_BASE}/cache/clear`, { method: 'POST' }); } catch { }
     }
     closeModal();
   };
@@ -311,55 +311,74 @@ const ChatInterface = ({ onLogout }) => {
     setIsTyping(true);
 
     try {
-      // 2. Call your FastAPI Backend
-      // NOTE: Ensure your FastAPI backend is running on port 8000 and has CORS enabled
-      const response = await fetch(`${API_BASE}/chat`, { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            message: input,
-            bypass_cache: messages.length <= 1,
-            max_tokens: 1200,
-        })
+      console.log('handleSend: Streaming chat message to backend...');
+      const body = JSON.stringify({
+        message: userMsg.content,
+        bypass_cache: messages.length <= 1,
+        max_tokens: 1200,
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const response = await fetch(`${API_BASE}/chat/stream`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body
+      });
+
+      if (!response.ok || !response.body) {
+        console.error('handleSend: /chat/stream failed', response);
+        throw new Error('Streaming response was not ok');
       }
 
-      const data = await response.json();
+      // 3. Stream the GraphRAG response to UI incrementally
+      const assistantId = Date.now() + 1;
+      setMessages(prev => [...prev, { id: assistantId, role: 'assistant', content: '', hasGraph: false, graphNodes: [] }]);
 
-      // 3. Add the GraphRAG response to UI
-      const botMsg = { 
-        id: Date.now() + 1, 
-        role: 'assistant', 
-        content: data.answer,             // Expecting 'answer' field from API
-        hasGraph: data.nodes?.length > 0, // Expecting 'nodes' array from API
-        graphNodes: data.nodes || []      // Actual nodes to visualize
-      };
-      
-      setMessages(prev => [...prev, botMsg]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        accumulated += chunk;
+        setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: accumulated } : m));
+      }
+
+      // Try to parse accumulated as JSON
+      let answerText = accumulated;
+      try {
+        const parsed = JSON.parse(accumulated);
+        if (parsed && typeof parsed === 'object' && parsed.answer) {
+          answerText = parsed.answer;
+        }
+      } catch { }
+      setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, content: answerText } : m));
+
+      // 4. Save history ONLY if Knowledge Graph was used (checked via citations)
+      // Note: LLM might use standard brackets [] or unicode brackets 【】
+      console.log('DEBUG: Checking citations in answerText:', answerText.substring(0, 200));
+      const hasKGCitations =
+        answerText.includes('[node:') || answerText.includes('[chunk:') ||
+        answerText.includes('【node:') || answerText.includes('【chunk:');
+
+      console.log('DEBUG: hasKGCitations =', hasKGCitations);
+
+      if (hasKGCitations) {
+        console.log('DEBUG: Saving history for:', userMsg.content);
+        const newHistoryItem = { id: Date.now(), title: userMsg.content, date: 'Today' };
+        setHistory(prev => [newHistoryItem, ...prev]);
+        try {
+          await fetch(`${API_BASE}/history`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newHistoryItem) });
+        } catch (historyError) {
+          console.error('handleSend: Error saving history:', historyError);
+        }
+      } else {
+        console.log('handleSend: No KG citations found, skipping history save.');
+      }
 
     } catch (error) {
-      console.error("Connection failed:", error);
-      
-      // Fallback for demo purposes if backend isn't running
-      // REMOVE THIS BLOCK IN PRODUCTION
-      setTimeout(() => {
-        const botMsg = { 
-            id: Date.now() + 1, 
-            role: 'assistant', 
-            content: "Backend connection failed. Displaying demo response: \n\nI've traced the dependencies in `fastapi.applications`. The `FastAPI` class inherits from Starlette, which handles the underlying ASGI routing.",
-            hasGraph: true,
-            graphNodes: [
-              { label: 'fastapi.FastAPI', type: 'Class' },
-              { label: 'starlette.Starlette', type: 'Class' },
-              { label: 'Inherits', type: 'Relation' }
-            ]
-        };
-        setMessages(prev => [...prev, botMsg]);
-      }, 1000);
-      
+      console.error("handleSend: Connection failed or other error:", error);
     } finally {
       setIsTyping(false);
     }
@@ -377,7 +396,7 @@ const ChatInterface = ({ onLogout }) => {
       <NoiseOverlay />
 
       {/* --- SIDEBAR --- */}
-      <aside 
+      <aside
         className={`
           fixed inset-y-0 left-0 z-20 flex w-72 flex-col border-r-2 border-[#01012b] bg-[#e8e8e8] transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -396,7 +415,7 @@ const ChatInterface = ({ onLogout }) => {
         </div>
 
         <div className="p-4">
-          <button 
+          <button
             onClick={() => setMessages([])}
             className="flex w-full items-center justify-center gap-2 border-2 border-[#01012b] bg-[#ff4400] px-4 py-3 text-sm font-bold text-white shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:border-[#01012b]"
           >
@@ -409,7 +428,7 @@ const ChatInterface = ({ onLogout }) => {
           <div className="mb-2 flex items-center justify-between">
             <div className="text-xs font-bold uppercase tracking-widest text-gray-500">Recent Queries</div>
             {history.length > 0 && (
-              <button 
+              <button
                 onClick={requestClearAllHistory}
                 className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:text-red-700"
               >
@@ -417,11 +436,11 @@ const ChatInterface = ({ onLogout }) => {
               </button>
             )}
           </div>
-          
+
           <div className="flex flex-col gap-2 pb-4">
             {history.map((item) => (
               <div key={item.id} className="relative group">
-                <button 
+                <button
                   className="flex w-full flex-col items-start border border-transparent p-2 pr-8 text-left text-sm transition-all hover:border-[#01012b] hover:bg-white"
                 >
                   <span className="font-medium truncate w-full text-[#01012b]">{item.title}</span>
@@ -452,7 +471,7 @@ const ChatInterface = ({ onLogout }) => {
                 )}
               </div>
             ))}
-            
+
             {history.length === 0 && (
               <div className="py-4 text-center text-xs italic text-gray-400">
                 No recent history
@@ -472,20 +491,20 @@ const ChatInterface = ({ onLogout }) => {
 
       {/* --- MAIN CONTENT --- */}
       <main className="relative flex flex-1 flex-col overflow-hidden">
-        
+
         <header className="flex h-16 items-center justify-between border-b-2 border-[#01012b] bg-white px-4 md:px-6">
           <div className="flex items-center gap-3">
             {!sidebarOpen && (
-              <button 
-                onClick={() => setSidebarOpen(true)} 
+              <button
+                onClick={() => setSidebarOpen(true)}
                 className="mr-2 rounded-sm p-1 hover:bg-gray-200 text-[#01012b]"
               >
                 <Menu size={24} />
               </button>
             )}
             <h1 className="font-bold text-lg flex items-center gap-2">
-               <span className="bg-[#01012b] text-white px-2 py-0.5 text-xs uppercase tracking-wider">Celer</span>
-               <span className="text-[#01012b]">Connected</span>
+              <span className="bg-[#01012b] text-white px-2 py-0.5 text-xs uppercase tracking-wider">Celer</span>
+              <span className="text-[#01012b]">Connected</span>
             </h1>
           </div>
           <div className="flex gap-2">
@@ -497,7 +516,7 @@ const ChatInterface = ({ onLogout }) => {
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
           <div className="mx-auto max-w-3xl space-y-8">
-            
+
             {messages.length === 0 && (
               <div className="mt-20 text-center opacity-60">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center border-4 border-[#01012b] bg-white rounded-full text-[#01012b]">
@@ -509,8 +528,8 @@ const ChatInterface = ({ onLogout }) => {
             )}
 
             {messages.map((msg) => (
-              <div 
-                key={msg.id} 
+              <div
+                key={msg.id}
                 className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.role === 'assistant' && (
@@ -519,19 +538,19 @@ const ChatInterface = ({ onLogout }) => {
                   </div>
                 )}
 
-                <div 
+                <div
                   className={`
-                    relative max-w-[85%] border-2 p-5
-                    ${msg.role === 'user' 
-                      ? 'border-[#01012b] bg-[#01012b] text-white shadow-[4px_4px_0px_0px_rgba(1,1,43,0.5)]' 
+                    relative max-w-[85%] border-2 p-5 overflow-hidden
+                    ${msg.role === 'user'
+                      ? 'border-[#01012b] bg-[#01012b] text-white shadow-[4px_4px_0px_0px_rgba(1,1,43,0.5)]'
                       : 'border-[#01012b] bg-white text-[#01012b] shadow-[4px_4px_0px_0px_rgba(1,1,43,1)]'
                     }
                   `}
                 >
-                  <p className="whitespace-pre-wrap text-sm md:text-base leading-relaxed font-medium">
+                  <p className="whitespace-pre-wrap break-words text-sm md:text-base leading-relaxed font-medium">
                     {msg.content}
                   </p>
-                  
+
                   {msg.role === 'assistant' && msg.hasGraph && (
                     <GraphVisualizer nodes={msg.graphNodes} />
                   )}
@@ -546,18 +565,18 @@ const ChatInterface = ({ onLogout }) => {
             ))}
 
             {isTyping && (
-               <div className="flex gap-4 justify-start">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#01012b] bg-white text-[#01012b] shadow-[3px_3px_0px_0px_rgba(1,1,43,1)]">
-                    AI
-                  </div>
-                  <div className="border-2 border-[#01012b] bg-white p-4 shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] flex items-center gap-2">
-                     <span className="w-2 h-2 bg-[#01012b] animate-bounce"></span>
-                     <span className="w-2 h-2 bg-[#01012b] animate-bounce delay-100"></span>
-                     <span className="w-2 h-2 bg-[#01012b] animate-bounce delay-200"></span>
-                  </div>
-               </div>
+              <div className="flex gap-4 justify-start">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-[#01012b] bg-white text-[#01012b] shadow-[3px_3px_0px_0px_rgba(1,1,43,1)]">
+                  AI
+                </div>
+                <div className="border-2 border-[#01012b] bg-white p-4 shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] flex items-center gap-2">
+                  <span className="w-2 h-2 bg-[#01012b] animate-bounce"></span>
+                  <span className="w-2 h-2 bg-[#01012b] animate-bounce delay-100"></span>
+                  <span className="w-2 h-2 bg-[#01012b] animate-bounce delay-200"></span>
+                </div>
+              </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
         </div>
@@ -578,7 +597,7 @@ const ChatInterface = ({ onLogout }) => {
                 CMD + Enter
               </div>
             </div>
-            <button 
+            <button
               onClick={handleSend}
               disabled={!input.trim()}
               className="group flex h-[60px] w-[60px] items-center justify-center border-2 border-[#01012b] bg-[#01012b] text-white transition-all hover:bg-[#ff4400] hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(1,1,43,1)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
@@ -587,14 +606,14 @@ const ChatInterface = ({ onLogout }) => {
             </button>
           </div>
           <div className="mx-auto max-w-3xl mt-2 text-center">
-             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                AI can make mistakes. Verify CelerGraph connections.
-             </span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              AI can make mistakes. Verify CelerGraph connections.
+            </span>
           </div>
         </div>
 
         {/* Confirmation Modal */}
-        <ConfirmationModal 
+        <ConfirmationModal
           isOpen={modalConfig.isOpen}
           title={modalConfig.type === 'all' ? "CLEAR HISTORY" : "DELETE CHAT"}
           message={modalConfig.type === 'all' ? "Are you sure you want to delete all history?" : "Are you sure you want to delete this?"}
@@ -610,7 +629,7 @@ const ChatInterface = ({ onLogout }) => {
  * MAIN APP CONTAINER (Root)
  */
 const App = () => {
-  const [currentView, setCurrentView] = useState('landing'); 
+  const [currentView, setCurrentView] = useState('landing');
 
   return (
     <>
@@ -625,8 +644,14 @@ const App = () => {
 };
 
 // RENDER
-const root = createRoot(document.getElementById('root'));
-root.render(
+const container = document.getElementById('root');
+
+// Prevent HMR double-render warning
+if (!container._reactRoot) {
+  container._reactRoot = createRoot(container);
+}
+
+container._reactRoot.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

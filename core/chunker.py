@@ -2,7 +2,13 @@ import os
 from pathlib import Path
 
 from tree_sitter import Parser
-from tree_sitter_languages import get_language  # type: ignore[import-untyped]
+import warnings
+
+# Suppress FutureWarning from tree_sitter (deprecated Language constructor)
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=FutureWarning, module="tree_sitter")
+    from tree_sitter_languages import get_language  # type: ignore[import-untyped]
+
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import chromadb
 
@@ -13,9 +19,16 @@ from observability.tracing import trace_span
 from opentelemetry import trace as otel_trace
 
 from typing import Optional
+from typing import Optional
 try:
-    PY_LANG = get_language("python")
-    parser: Optional[Parser] = Parser(PY_LANG)
+    # Suppress FutureWarning from tree_sitter (deprecated Language constructor)
+    # We filter by message because the module path can be tricky
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=FutureWarning, message=".*Language\\(path, name\\) is deprecated.*")
+        PY_LANG = get_language("python")
+        
+    parser: Optional[Parser] = Parser()
+    parser.set_language(PY_LANG)
 except Exception as e:
     print(f"Warning: Failed to initialize tree-sitter parser: {e}")
     PY_LANG = None

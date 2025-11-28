@@ -1,12 +1,12 @@
-“How does routing work in this project?”
+How does routing work in this project?
 
-“Explain the role of APIRouter.route() and cite the chunk IDs used.”
+Explain the role of APIRouter.route() and cite the chunk IDs used.
 
-“How does a request flow from creation → handler → response?”
+How does a request flow from creation → handler → response?
 
-“List all modules related to exception handling.”
+List all modules related to exception handling.
 
-“What is the purpose of the TestClient implementation?”
+What is the purpose of the TestClient implementation?
 
 How does FastAPI handle request validation?"
 
