@@ -281,41 +281,176 @@ Notes:
 - Extend the frontend UI in `frontend/src/GraphRAGChat.jsx`
 ## Architecture Diagrams
 
-### System Overview
+### Architecture Diagrams
 
-<p align="center">
-  <img src="assets/overview.png" alt="Logo" width="1200">
-</p>
+#### System Overview
 
-### Overall Components
-<p align="center">
-  <img src="assets/components.png" alt="Logo" width="800">
-</p>
+```mermaid
+flowchart LR
+  subgraph Client
+    U["User"]
+    FE["Web UI (React/Vite)"]
+  end
 
-### RAG Request Flow
+  subgraph Backend
+    API["FastAPI"]
+    RL["RateLimit Middleware"]
+    CORS["CORS"]
+    Routes["API Routes"]
+    Ctrl["Controllers"]
+    RAG["GraphRAG Pipeline"]
+  end
 
-<p align="center">
-  <img src="assets/rag_request.png" alt="Logo" width="800">
-</p>
+  subgraph Storage
+    CH["ChromaDB"]
+    CE["code_chunks"]
+    NE["node_embeddings"]
+    SC["semantic_cache"]
+  end
 
-### Knowledge Graph Build Pipeline
+  subgraph Graph
+    N4J["Neo4j"]
+  end
 
-<p align="center">
-  <img src="assets/kg.png" alt="Logo" width="800">
-</p>
+  subgraph LLM
+    Groq["Groq LLM"]
+  end
 
-### Data Stores (Chroma Collections)
+  subgraph Observability
+    OTEL["OpenTelemetry"]
+    PH["Phoenix"]
+    Log["JSON Logger"]
+  end
 
-<p align="center">
-  <img src="assets/chroma.png" alt="Logo" width="800">
-</p>
+  U --> FE
+  FE -->|HTTP| API
+  API --> RL
+  API --> CORS
+  API --> Routes
+  Routes --> Ctrl
+  Ctrl --> RAG
+  RAG --> CH
+  CH --> CE
+  CH --> NE
+  CH --> SC
+  RAG -.->|optional neighbors| N4J
+  RAG --> Groq
+  API --> OTEL
+  OTEL --> PH
+  RAG --> OTEL
+  API --> Log
+  FE -->|/api/chat| API
+  FE -->|/api/chat/stream| API
+  FE -->|/api/index| API
+  FE -->|/api/cache/clear| API
+```
 
+#### Overall Components
 
-### Streaming Chat Flow
+```mermaid
+flowchart TD
+  FE["Frontend (Vite/React)"] -->|HTTP| API["FastAPI API"]
+  API -->|CORS + RateLimit| MW["Middlewares"]
+  API -->|OpenAPI| Docs["Swagger / ReDoc"]
+  API --> Ctrl["Controllers"]
+  Ctrl --> RAG["GraphRAG Pipeline"]
+  RAG --> CH["ChromaDB"]
+  RAG -.->|optional| N4J["Neo4j"]
+  RAG --> LLM["Groq LLM"]
+  RAG --> Cache["Semantic Cache"]
+  Obs["Phoenix + OTEL"] <-->|Spans/Metrics| API
+  Obs <-->|Spans/Metrics| RAG
+  subgraph Storage
+    CH
+    Cache
+  end
+```
 
-<p align="center">
-  <img src="assets/streaming.png" alt="Logo" width="800">
-</p>
+#### RAG Request Flow
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend
+  participant API as FastAPI_Router
+  participant CC as ChatController
+  participant RAG as GraphRAG
+  participant CH as ChromaDB
+  participant N4J as Neo4j_optional
+  participant LLM as Groq_LLM
+  participant SC as SemanticCache
+
+  U->>FE: Enter question
+  FE->>API: POST /api/chat
+  API->>CC: Route to controller
+  CC->>RAG: answer_question(q)
+  alt Cache enabled
+    RAG->>SC: lookup(q)
+    SC-->>RAG: hit/miss
+  end
+  par Parallel retrieval
+    RAG->>CH: query node_embeddings
+    RAG->>CH: query code_chunks
+  end
+  opt Neo4j neighbors
+    RAG->>N4J: expand_neighbors(ids)
+    N4J-->>RAG: neighbor IDs
+  end
+  RAG->>LLM: Prompt with built context
+  LLM-->>RAG: Answer text
+  RAG->>SC: store(q, answer, refs)
+  RAG-->>CC: {answer, references}
+  CC-->>FE: JSON response
+  FE-->>U: Render with citations
+```
+
+#### Knowledge Graph Build Pipeline
+
+```mermaid
+flowchart LR
+  SRC["Python source files"] --> CST["LibCST parse"]
+  CST --> EX["PyExtract visitor"]
+  EX --> KGNodes["Nodes: module/class/function"]
+  EX --> KGEdges["Edges: CONTAINS/CALLS/IMPORTS/INHERITS"]
+  KGNodes --> JSON["knowledge_graph.json"]
+  KGEdges --> JSON
+  TS["Tree-sitter (optional)"] --> KGNodes
+  JSON -->|batch import| N4J["Neo4j"]
+```
+
+#### Data Stores (Chroma Collections)
+
+```mermaid
+flowchart TB
+  subgraph ChromaDB
+    CE["code_chunks"]
+    NE["node_embeddings"]
+    SC["semantic_cache"]
+  end
+
+  CE -->|documents: chunk text| UI1["Used in retrieval"]
+  NE -->|documents: node text| UI2["Used in retrieval"]
+  SC -->|metadata: answer + references_json| UI3["Cache hit returns formatted answer"]
+```
+
+#### Streaming Chat Flow
+
+```mermaid
+sequenceDiagram
+  participant FE as Frontend
+  participant API as /api/chat/stream
+  participant CC as ChatStreamController
+  participant RAG as rag_chain_stream
+
+  FE->>API: POST /api/chat/stream
+  API->>CC: start stream
+  CC->>RAG: stream(question)
+  loop chunks
+    RAG-->>CC: token(s)
+    CC-->>FE: write chunk
+    FE->>FE: append to UI
+  end
+```
 
 ## Project Structure
 
