@@ -21,6 +21,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.mypy_cache
+.ruff_cache
 
 # Virtual Environments
 .env
@@ -83,7 +85,7 @@ frontend/build/
 vectorstore/
 chat_history.json
 *.log
-w_reports/
+!w_reports/
 test_output*.txt
 .mypy_cache/
 .ruff_cache/

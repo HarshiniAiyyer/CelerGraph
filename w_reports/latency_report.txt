@@ -1,0 +1,35 @@
+Starting Latency & Confidence Monitoring...
+Loaded 13 test cases.
+
+================================================================================
+Query                          | Ret(ms)  | Gen(ms)  | Sim   | Status
+================================================================================
+*** ENTERED answer_question FUNCTION ***
+How does routing work in fa... |   1537.9 |   1779.0 | 0.90  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+What is the purpose of the ... |     79.4 |    970.4 | 0.86  | PASS  
+*** ENTERED answer_question FUNCTION ***
+Explain the role of APIRout... |      0.0 |      0.0 | 0.00  | LOW_SIM
+*** ENTERED answer_question FUNCTION ***
+Explain what get_request_ha... |    220.3 |   6466.3 | 0.87  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+What parameters does APIWeb... |    177.5 |  11955.8 | 0.89  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+How does routing flow from ... |    178.1 |  14585.7 | 0.87  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+How is error handling imple... |    238.9 |   1944.8 | 0.88  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+Show me all components that... |    123.4 |  12767.5 | 0.89  | PASS  
+*** ENTERED answer_question FUNCTION ***
+Which modules depend on the... |      0.0 |      0.0 | 0.00  | LOW_SIM
+*** ENTERED answer_question FUNCTION ***
+What does the comment above... |    211.7 |   8325.8 | 0.88  | SLOW_R
+*** ENTERED answer_question FUNCTION ***
+Show related nodes to routi... |    143.4 |  12348.7 | 0.87  | PASS  
+*** ENTERED answer_question FUNCTION ***
+What is the responsibility ... |    131.2 |  14205.6 | 0.89  | PASS  
+*** ENTERED answer_question FUNCTION ***
+How are dependencies resolv... |    126.4 |  12301.1 | 0.89  | PASS  
+================================================================================
+
+Thresholds: Retrieval < 150ms, Similarity >= 0.65

@@ -1,0 +1,59 @@
+Starting Retrieval Quality Evaluation...
+Loaded 13 test cases.
+
+============================================================
+Query                                    | Status | Sim   | Recall
+============================================================
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::90", "text": "You shouldn't need to use it. It normally points to the `FastAPI` app\n                object.\n                \"\"\"\n            ),\n        ] = None,\n        route_class: Annotated[\n            Type[APIRoute],\n            Doc(\n                \"\"\"\n                Custom route (*path operation*) class to be used by this router.\n\n                Read more about it in the\n                [FastAPI docs for Custom Request and APIRoute class](https://fastapi.tiangolo.com/how-to/custom-request-and-route/#custom-apiroute-class-in-a-router).\n                \"\"\"\n            ),\n        ] = APIRoute,\n        on_startup: Annotated[\n            Optional[Sequence[Callable[[], Any]]],\n            Doc(\n                \"\"\"\n                A list of startup event handler functions.", "similarity": 0.9096615314483643, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "routing.APIRouter.get::doc", "text": "Add a *path operation* using an HTTP GET operation.\n\n## Example\n\n```python\nfrom fastapi import APIRouter, FastAPI\n\napp = FastAPI()\nrouter = APIRouter()\n\n@router.get(\"/items/\")\ndef read_items():\n    return [{\"name\": \"Empanada\"}, {\"name\": \"Arepa\"}]\n\napp.include_router(router)\n```", "similarity": 0.8965927362442017, "metadata": {"type": "docstring"}}
+How does routing work in fastapi?        | GOOD   | 0.91  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "testclient.py::0", "text": "from starlette.testclient import TestClient as TestClient  # noqa\n", "similarity": 0.897789478302002, "metadata": {"file": "D:\\inco\\infos\\testclient.py"}}
+DEBUG Node[0]: {"id": "testclient", "text": "File: testclient.py", "similarity": 0.9203075170516968, "metadata": {"type": "module"}}
+What is the purpose of the TestClient... | GOOD   | 0.92  | 1.0
+*** ENTERED answer_question FUNCTION ***
+Explain the role of APIRouter.route()    | MISS   | 0.00  | 0.0
+  Expected: ['infos/routing.py']
+  Top Refs: []...
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py::87", "text": "request_info=self.request_info,\n            traces=self._traces,\n            loop=self.loop,\n            session=self._session,\n        )\n        return self.response", "similarity": 0.8867359161376953, "metadata": {"file": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py"}}
+DEBUG Node[0]: {"id": "routing.get_request_handler", "text": "Name: get_request_handler\nFile: routing.py", "similarity": 0.9030950665473938, "metadata": {"type": "function"}}
+Explain what get_request_handler does... | GOOD   | 0.90  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::45", "text": "class APIWebSocketRoute(routing.WebSocketRoute):\n    def __init__(\n        self,\n        path: str,\n        endpoint: Callable[..., Any],\n        *,\n        name: Optional[str] = None,\n        dependencies: Optional[Sequence[params.Depends]] = None,\n        dependency_overrides_provider: Optional[Any] = None,\n    ) -> None:\n        self.path = path\n        self.endpoint = endpoint\n        self.name = get_name(endpoint) if name is None else name\n        self.dependencies = list(dependencies or [])\n        self.path_regex, self.path_format, self.param_convertors = compile_path(path)\n        self.dependant = get_dependant(\n            path=self.path_format, call=self.endpoint, scope=\"function\"\n        )\n        for depends in self.dependencies[::-1]:", "similarity": 0.9001646041870117, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "routing.APIWebSocketRoute", "text": "Name: APIWebSocketRoute\nFile: routing.py", "similarity": 0.9335286617279053, "metadata": {"type": "class"}}
+What parameters does APIWebSocketRout... | GOOD   | 0.93  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py::87", "text": "request_info=self.request_info,\n            traces=self._traces,\n            loop=self.loop,\n            session=self._session,\n        )\n        return self.response", "similarity": 0.8838131427764893, "metadata": {"file": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py"}}
+DEBUG Node[0]: {"id": "routing.request_response", "text": "Name: request_response\nFile: routing.py", "similarity": 0.8949954509735107, "metadata": {"type": "function"}}
+How does routing flow from request to... | GOOD   | 0.89  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "applications.py::30", "text": "In FastAPI, you would normally use the decorator\n                `@app.exception_handler()`.\n\n                Read more in the\n                [FastAPI docs for Handling Errors](https://fastapi.tiangolo.com/tutorial/handling-errors/).\n                \"\"\"\n            ),\n        ] = None,\n        on_startup: Annotated[\n            Optional[Sequence[Callable[[], Any]]],\n            Doc(\n                \"\"\"\n                A list of startup event handler functions.\n\n                You should instead use the `lifespan` handlers.", "similarity": 0.880084753036499, "metadata": {"file": "data\\infos\\applications.py"}}
+DEBUG Node[0]: {"id": "applications.FastAPI.exception_handler", "text": "Name: exception_handler\nFile: applications.py", "similarity": 0.886979341506958, "metadata": {"type": "function"}}
+How is error handling implemented acr... | GOOD   | 0.89  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::261", "text": "app.include_router(router)\n        ```\n        \"\"\"\n        return self.api_route(\n            path=path,\n            response_model=response_model,\n            status_code=status_code,\n            tags=tags,\n            dependencies=dependencies,\n            summary=summary,\n            description=description,\n            response_description=response_description,\n            responses=responses,\n            deprecated=deprecated,\n            methods=[\"OPTIONS\"],\n            operation_id=operation_id,\n            response_model_include=response_model_include,\n            response_model_exclude=response_model_exclude,\n            response_model_by_alias=response_model_by_alias,\n            response_model_exclude_unset=response_model_exclude_unset,", "similarity": 0.8801097869873047, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "routing.APIRouter", "text": "Name: APIRouter\nFile: routing.py", "similarity": 0.9051637649536133, "metadata": {"type": "class"}}
+Show me all components that reference... | GOOD   | 0.91  | 1.0
+*** ENTERED answer_question FUNCTION ***
+Which modules depend on the datastruc... | MISS   | 0.00  | 0.0
+  Expected: ['infos/datastructures.py']
+  Top Refs: []...
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py::48", "text": "self.method = method.upper()\n        self.chunked = chunked\n        self.compress = compress\n        self.loop = loop\n        self.length = None\n        if response_class is None:\n            real_response_class = ClientResponse\n        else:\n            real_response_class = response_class\n        self.response_class: Type[ClientResponse] = real_response_class\n        self._timer = timer if timer is not None else TimerNoop()\n        self._ssl = ssl if ssl is not None else True\n        self.server_hostname = server_hostname", "similarity": 0.8861647844314575, "metadata": {"file": "bien\\Lib\\site-packages\\aiohttp\\client_reqrep.py"}}
+DEBUG Node[0]: {"id": "routing.serialize_response", "text": "Name: serialize_response\nFile: routing.py", "similarity": 0.9020435810089111, "metadata": {"type": "function"}}
+What does the comment above serialize... | GOOD   | 0.90  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::385", "text": "def include_router(\n        self,\n        router: Annotated[\"APIRouter\", Doc(\"The `APIRouter` to include.\")],\n        *,\n        prefix: Annotated[str, Doc(\"An optional path prefix for the router.\")] = \"\",\n        tags: Annotated[\n            Optional[List[Union[str, Enum]]],\n            Doc(\n                \"\"\"\n                A list of tags to be applied to all the *path operations* in this\n                router.\n\n                It will be added to the generated OpenAPI (e.g. visible at `/docs`).", "similarity": 0.8722850680351257, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "routing.APIRouter", "text": "Name: APIRouter\nFile: routing.py", "similarity": 0.8872429132461548, "metadata": {"type": "class"}}
+Show related nodes to routing.APIRout... | GOOD   | 0.89  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::51", "text": "class APIRoute(routing.Route):\n    def __init__(\n        self,\n        path: str,\n        endpoint: Callable[..., Any],\n        *,\n        response_model: Any = Default(None),\n        status_code: Optional[int] = None,\n        tags: Optional[List[Union[str, Enum]]] = None,\n        dependencies: Optional[Sequence[params.Depends]] = None,\n        summary: Optional[str] = None,\n        description: Optional[str] = None,\n        response_description: str = \"Successful Response\",\n        responses: Optional[Dict[Union[int, str], Dict[str, Any]]] = None,\n        deprecated: Optional[bool] = None,\n        name: Optional[str] = None,\n        methods: Optional[Union[Set[str], List[str]]] = None,\n        operation_id: Optional[str] = None,\n        response_model_include: Optional[IncEx] = None,", "similarity": 0.8897929191589355, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "routing", "text": "File: routing.py", "similarity": 0.9229285717010498, "metadata": {"type": "module"}}
+What is the responsibility of the rou... | GOOD   | 0.92  | 1.0
+*** ENTERED answer_question FUNCTION ***
+DEBUG Chunk[0]: {"id": "routing.py::27", "text": "# Solve dependencies and run path operation function, auto-closing dependencies\n        errors: List[Any] = []\n        async_exit_stack = request.scope.get(\"fastapi_inner_astack\")\n        assert isinstance(async_exit_stack, AsyncExitStack), (\n            \"fastapi_inner_astack not found in request scope\"\n        )\n        solved_result = await solve_dependencies(\n            request=request,\n            dependant=dependant,\n            body=body,\n            dependency_overrides_provider=dependency_overrides_provider,\n            async_exit_stack=async_exit_stack,\n            embed_body_fields=embed_body_fields,\n        )\n        errors = solved_result.errors\n        if not errors:\n            raw_response = await run_endpoint_function(\n                dependant=dependant,", "similarity": 0.898636519908905, "metadata": {"file": "D:\\inco\\infos\\routing.py"}}
+DEBUG Node[0]: {"id": "exceptions.FastAPIError::doc", "text": "A generic, FastAPI-specific error.", "similarity": 0.9156953692436218, "metadata": {"type": "docstring"}}
+How are dependencies resolved in Fast... | GOOD   | 0.92  | 1.0
+============================================================

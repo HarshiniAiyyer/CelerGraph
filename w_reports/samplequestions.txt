@@ -1,0 +1,41 @@
+How does a request flow from creation → handler → response?
+
+List all modules related to exception handling.
+
+What is the purpose of the TestClient implementation?
+
+How does FastAPI handle request validation?"
+
+"Show me an example of dependency injection in FastAPI"
+
+"What's the difference between Path and Query parameters?"
+
+"How does FastAPI generate OpenAPI schemas?"
+
+"Explain the lifecycle of a FastAPI request"
+
+How does routing work in fastapi?
+
+What is the purpose of the TestClient class?
+
+Explain the role of APIRouter.route()
+
+Explain what get_request_handler does.
+
+What parameters does APIWebSocketRoute accept?
+
+How does routing flow from request to response?
+
+How is error handling implemented across the application?
+
+Show me all components that reference APIRouter.
+
+Which modules depend on the datastructures module?
+
+What does the comment above serialize_response() explain?
+
+Show related nodes to routing.APIRouter.route.
+
+What is the responsibility of the routing module?
+
+How are dependencies resolved in FastAPI?
