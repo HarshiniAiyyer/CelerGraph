@@ -829,53 +829,45 @@ The FastAPI backend exposes the following documented endpoints. Visit `http://lo
 
 ---
 
-## System Architecture
-
-### System Overview
-The system consists of three main services:
-- **Vue.js Frontend**: User interface for chat interactions
-- **FastAPI Backend**: RAG API with knowledge graph integration  
-- **Phoenix Observability**: Tracing and monitoring dashboard
-
 ### Architecture Diagrams
 
 #### System Overview
 
 ```mermaid
-graph LR
+flowchart LR
   subgraph Client
-    U[👤 User]
-    FE[⚛️ Web UI (React/Vite)]
+    U["User"]
+    FE["Web UI (React/Vite)"]
   end
 
   subgraph Backend
-    API[🚀 FastAPI]
-    RL[⏱️ RateLimit Middleware]
-    CORS[🔒 CORS]
-    Routes[🧭 API Routes]
-    Ctrl[🎛️ Controllers]
-    RAG[🧠 GraphRAG Pipeline]
+    API["FastAPI"]
+    RL["RateLimit Middleware"]
+    CORS["CORS"]
+    Routes["API Routes"]
+    Ctrl["Controllers"]
+    RAG["GraphRAG Pipeline"]
   end
 
   subgraph Storage
-    CH[(💽 ChromaDB)]
-    CE[📄 code_chunks]
-    NE[🧬 node_embeddings]
-    SC[🗂️ semantic_cache]
+    CH["ChromaDB"]
+    CE["code_chunks"]
+    NE["node_embeddings"]
+    SC["semantic_cache"]
   end
 
   subgraph Graph
-    N4J[(🕸️ Neo4j)]
+    N4J["Neo4j"]
   end
 
   subgraph LLM
-    Groq[🤖 Groq LLM]
+    Groq["Groq LLM"]
   end
 
   subgraph Observability
-    OTEL[🛰️ OpenTelemetry]
-    PH[🔥 Phoenix]
-    Log[🧾 JSON Logger]
+    OTEL["OpenTelemetry"]
+    PH["Phoenix"]
+    Log["JSON Logger"]
   end
 
   U --> FE
@@ -904,17 +896,17 @@ graph LR
 #### Overall Components
 
 ```mermaid
-graph TD
-  FE[Frontend (Vite/React)] -->|HTTP| API[FastAPI API]
-  API -->|CORS + RateLimit| MW[Middlewares]
-  API -->|OpenAPI| Docs[Swagger/ReDoc]
-  API --> Ctrl[Controllers]
-  Ctrl --> RAG[GraphRAG Pipeline]
-  RAG --> CH[ChromaDB]
-  RAG -.->|optional| N4J[Neo4j]
-  RAG --> LLM[Groq LLM]
-  RAG --> Cache[Semantic Cache]
-  Obs[Phoenix + OTEL] <-->|Spans/Metrics| API
+flowchart TD
+  FE["Frontend (Vite/React)"] -->|HTTP| API["FastAPI API"]
+  API -->|CORS + RateLimit| MW["Middlewares"]
+  API -->|OpenAPI| Docs["Swagger / ReDoc"]
+  API --> Ctrl["Controllers"]
+  Ctrl --> RAG["GraphRAG Pipeline"]
+  RAG --> CH["ChromaDB"]
+  RAG -.->|optional| N4J["Neo4j"]
+  RAG --> LLM["Groq LLM"]
+  RAG --> Cache["Semantic Cache"]
+  Obs["Phoenix + OTEL"] <-->|Spans/Metrics| API
   Obs <-->|Spans/Metrics| RAG
   subgraph Storage
     CH
@@ -927,13 +919,13 @@ graph TD
 ```mermaid
 sequenceDiagram
   participant U as User
-  participant FE as Frontend (React)
-  participant API as FastAPI Router
+  participant FE as Frontend
+  participant API as FastAPI_Router
   participant CC as ChatController
   participant RAG as GraphRAG
   participant CH as ChromaDB
-  participant N4J as Neo4j (optional)
-  participant LLM as Groq LLM
+  participant N4J as Neo4j_optional
+  participant LLM as Groq_LLM
   participant SC as SemanticCache
 
   U->>FE: Enter question
@@ -949,7 +941,7 @@ sequenceDiagram
     RAG->>CH: query code_chunks
   end
   opt Neo4j neighbors
-    RAG->>N4J: expand neighbors(ids)
+    RAG->>N4J: expand_neighbors(ids)
     N4J-->>RAG: neighbor IDs
   end
   RAG->>LLM: Prompt with built context
@@ -964,14 +956,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  SRC[Python source files] --> CST[LibCST parse]
-  CST --> EX[PyExtract visitor]
-  EX --> KGNodes[Nodes: module/class/function]
-  EX --> KGEdges[Edges: CONTAINS/CALLS/IMPORTS/INHERITS]
-  KGNodes --> JSON[knowledge_graph.json]
+  SRC["Python source files"] --> CST["LibCST parse"]
+  CST --> EX["PyExtract visitor"]
+  EX --> KGNodes["Nodes: module/class/function"]
+  EX --> KGEdges["Edges: CONTAINS/CALLS/IMPORTS/INHERITS"]
+  KGNodes --> JSON["knowledge_graph.json"]
   KGEdges --> JSON
-  TS[Tree-sitter (optional)] --> KGNodes
-  JSON -->|batch import| N4J[(Neo4j)]
+  TS["Tree-sitter (optional)"] --> KGNodes
+  JSON -->|batch import| N4J["Neo4j"]
 ```
 
 #### Data Stores (Chroma Collections)
@@ -979,14 +971,14 @@ flowchart LR
 ```mermaid
 flowchart TB
   subgraph ChromaDB
-    CE[code_chunks]
-    NE[node_embeddings]
-    SC[semantic_cache]
+    CE["code_chunks"]
+    NE["node_embeddings"]
+    SC["semantic_cache"]
   end
 
-  CE -->|documents: chunk text| UI1[Used in retrieval]
-  NE -->|documents: node text| UI2[Used in retrieval]
-  SC -->|metadatas: answer + references_json| UI3[Cache hit returns formatted answer]
+  CE -->|documents: chunk text| UI1["Used in retrieval"]
+  NE -->|documents: node text| UI2["Used in retrieval"]
+  SC -->|metadata: answer + references_json| UI3["Cache hit returns formatted answer"]
 ```
 
 #### Streaming Chat Flow
@@ -996,7 +988,7 @@ sequenceDiagram
   participant FE as Frontend
   participant API as /api/chat/stream
   participant CC as ChatStreamController
-  participant RAG as rag_chain.stream()
+  participant RAG as rag_chain_stream
 
   FE->>API: POST /api/chat/stream
   API->>CC: start stream
@@ -1007,8 +999,7 @@ sequenceDiagram
     FE->>FE: append to UI
   end
 ```
-
-
+```
 ---
 
 ## Development Workflow
