@@ -1,6 +1,6 @@
 <p align="center"> <img src="assets/logo.jpg" alt="Logo" width="500"> </p>
 
-\\
+
 This guide documents the complete workflow for setting up and running the Knowledge Graph RAG (Retrieval-Augmented Generation) system.
 
 ## Documentation
