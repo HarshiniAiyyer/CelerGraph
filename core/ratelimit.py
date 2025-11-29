@@ -12,15 +12,15 @@ class RateLimiter:
 
     def allow(self, key: str, limit: int, window: float) -> Tuple[bool, int]:
         now = time.time()
-        q = self.store.get(key)
-        if q is None:
-            q = deque()
-            self.store[key] = q
-        while q and now - q[0] > window:
-            q.popleft()
-        if len(q) < limit:
-            q.append(now)
-            return True, limit - len(q)
+        timestamps = self.store.get(key)
+        if timestamps is None:
+            timestamps = deque()
+            self.store[key] = timestamps
+        while timestamps and now - timestamps[0] > window:
+            timestamps.popleft()
+        if len(timestamps) < limit:
+            timestamps.append(now)
+            return True, limit - len(timestamps)
         return False, 0
 
 
@@ -48,8 +48,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         limit, window = rule
         client = request.client
-        ident = client.host if client else "unknown"
-        key = f"{ident}:{path}"
+        identifier = client.host if client else "unknown"
+        key = f"{identifier}:{path}"
         ok, remaining = self.limiter.allow(key, limit, window)
         if not ok:
             return Response(status_code=429)

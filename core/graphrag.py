@@ -32,7 +32,8 @@ from config.logger import log
 from core.embeddings import embed_text, get_model
 from core.semantic_cache import SemanticCache
 from core.retrieval import retrieve_similar_nodes
-from observability.rag.rag_metrics import record_retrieval_metrics
+from observability.rag.rag_events import log_rag_event
+from observability.rag.rag_metrics import record_retrieval_metrics, record_generation_metrics
 
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
@@ -154,9 +155,7 @@ def expand_graph(node_ids: List[str], depth: int = 1) -> List[str]:
         raise Neo4jError(f"Graph expansion failed: {exc}") from exc
 
 
-# ---------------------------------------------------------
 # Retrieve code chunks with citations
-# ---------------------------------------------------------
 def retrieve_code_chunks(q: str, top_k: int = 8) -> List[Dict[str, Any]]:
     """Retrieve the most similar code chunks from ChromaDB based on a query.
     
@@ -237,9 +236,7 @@ def retrieve_code_chunks(q: str, top_k: int = 8) -> List[Dict[str, Any]]:
         raise ChromaError(f"Code chunk retrieval failed: {exc}") from exc
 
 
-# ---------------------------------------------------------
 # Build citation-rich context
-# ---------------------------------------------------------
 def build_context(nodes: List[Dict[str, Any]], chunks: List[Dict[str, Any]], 
                    neighbors: List[str]) -> str:
     """Build a formatted context string from retrieved nodes, chunks, and neighbors.
@@ -278,9 +275,7 @@ def build_context(nodes: List[Dict[str, Any]], chunks: List[Dict[str, Any]],
     return "\n".join(parts)
 
 
-# ---------------------------------------------------------
 # Prompt template with citations
-# ---------------------------------------------------------
 PROMPT = ChatPromptTemplate.from_template(
     """
 You are a codebase analysis assistant.
@@ -304,9 +299,7 @@ Answer:
 """
 )
 
-# ---------------------------------------------------------
 # LCEL Pipeline
-# ---------------------------------------------------------
 
 nodes_retriever = RunnableLambda(lambda q: retrieve_similar_nodes(q, top_k=8))
 chunks_retriever = RunnableLambda(lambda q: retrieve_code_chunks(q, top_k=8))
@@ -352,9 +345,7 @@ rag_chain = (
     | StrOutputParser()
 )
 
-# ---------------------------------------------------------
 # Semantic Cache (previous implementation)
-# ---------------------------------------------------------
 try:
     cache = SemanticCache(threshold=0.9)
     log.info("Semantic cache initialized")
@@ -517,22 +508,51 @@ def answer_question(question: str, bypass_cache: bool = False, llm_overrides: Op
         # Generate new answer using RAG pipeline
         log.debug("Generating new answer via RAG pipeline")
         t0 = time.perf_counter()
-        chain = rag_chain
+        
+        # Execute retrieval and context building explicitly to capture context
+        t_retrieval_start = time.perf_counter()
+        retrieval_results = parallel_retrieval.invoke(question)
+        t_retrieval_end = time.perf_counter()
+        retrieval_ms = (t_retrieval_end - t_retrieval_start) * 1000
+        
+        # Calculate retrieval metrics
+        chunks = retrieval_results.get("chunks", [])
+        nodes = retrieval_results.get("nodes", [])
+        total_items = len(chunks) + len(nodes)
+        scores = [c["similarity"] for c in chunks] + [n["similarity"] for n in nodes]
+        avg_sim = sum(scores) / len(scores) if scores else 0.0
+        
+        record_retrieval_metrics(
+            num_candidates=total_items,
+            num_selected=total_items,
+            retrieval_latency_ms=retrieval_ms,
+            avg_score=avg_sim
+        )
+        
+        graph_data = with_neighbors.invoke(retrieval_results)
+        final_context = context_builder.invoke(graph_data)
+        context_text = final_context["context"]
+        
+        # Generate answer
         if llm_overrides:
             override_llm = ChatGroq(
                 model=llm_overrides.get("model_name", MODEL_NAME),
                 temperature=llm_overrides.get("temperature", TEMPERATURE),
                 max_tokens=llm_overrides.get("max_tokens", MAX_TOKENS),
             )
-            chain = (
-                parallel_retrieval
-                | with_neighbors
-                | context_builder
-                | PROMPT
-                | override_llm
-                | StrOutputParser()
-            )
-        answer = chain.invoke(question)
+            chain = PROMPT | override_llm | StrOutputParser()
+        else:
+            chain = PROMPT | llm | StrOutputParser()
+            
+        t_gen_start = time.perf_counter()
+        answer = chain.invoke(final_context)
+        t_gen_end = time.perf_counter()
+        gen_ms = (t_gen_end - t_gen_start) * 1000
+        
+        record_generation_metrics(
+            generation_latency_ms=gen_ms
+        )
+        
         log.info(f"RAG pipeline generation took {time.perf_counter() - t0:.3f}s")
         log.debug(f"Raw LLM output before formatting: {answer}")
         formatted_answer, references = format_response(answer)
@@ -551,13 +571,23 @@ def answer_question(question: str, bypass_cache: bool = False, llm_overrides: Op
         
         if should_fallback:
             log.info("RAG provided insufficient context, falling back to direct LLM")
-            return {"answer": direct_llm_answer(question, llm_overrides), "references": []}
+            return {"answer": direct_llm_answer(question, llm_overrides), "references": [], "context": context_text}
         
         # Cache the result unless bypassed
         if not bypass_cache:
             cache.store(question, formatted_answer, references)
         log.info("Answer generated and cached successfully")
-        return {"answer": formatted_answer, "references": references}
+        return {
+            "answer": formatted_answer, 
+            "references": references, 
+            "context": context_text,
+            "retrieved_context": retrieval_results, # Contains raw nodes and chunks
+            "metrics": {
+                "retrieval_latency_ms": retrieval_ms,
+                "generation_latency_ms": gen_ms,
+                "avg_similarity_score": avg_sim
+            }
+        }
     except (ChromaError, EmbeddingError):
         # For Chroma/Embedding errors, fallback to direct LLM
         log.info("RAG system error, falling back to direct LLM")
@@ -652,14 +682,12 @@ def stream_answer(question: str, bypass_cache: bool = False, llm_overrides: Opti
             yield f"Error: Both RAG and direct LLM failed: {exc}"
 
 
-# ---------------------------------------------------------
 # CLI
-# ---------------------------------------------------------
 if __name__ == "__main__":
     print("Initializing GraphRAG...")
-    print("  • Loading embedding model...")
-    print("  • Connecting to ChromaDB...")
-    print("  • Setting up LLM chain...")
+    print("  - Loading embedding model...")
+    print("  - Connecting to ChromaDB...")
+    print("  - Setting up LLM chain...")
     print("\nGraphRAG Ready. Type 'exit' to stop.\n")
     
     try:

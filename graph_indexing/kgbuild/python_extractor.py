@@ -30,99 +30,89 @@ class PyExtract(cst.CSTVisitor):
         self.stack: List[str] = []   # class/function nesting
         self.current_fn = None       # fully-qualified name of current function
 
-    # -----------------------------
-    # Helper utilities
-    # -----------------------------
+    # Helper utility methods.
     def fq(self, name: str) -> str:
         """Build fully qualified name from current nesting."""
         parts = [self.module] + self.stack + [name]
         return ".".join(parts)
 
     def add_doc(self, node, parent_id: str):
-        ds = node.get_docstring()
-        if not ds:
+        docstring = node.get_docstring()
+        if not docstring:
             return
-        did = f"{parent_id}::doc"
-        self.kg.add_node(did, "docstring", text=ds)
-        self.kg.add_edge(parent_id, did, "HAS_DOC")
+        doc_id = f"{parent_id}::doc"
+        self.kg.add_node(doc_id, "docstring", text=docstring)
+        self.kg.add_edge(parent_id, doc_id, "HAS_DOC")
 
     def add_comments(self, node, parent_id: str):
         comments = []
 
-        # leading comments
+        # Handle leading comments.
         if hasattr(node, "leading_lines"):
             for line in node.leading_lines:
                 if line.comment:
                     comments.append(line.comment.value.strip())
 
-        # trailing comment
+        # Handle trailing comments.
         if hasattr(node, "trailing_whitespace"):
-            tw = node.trailing_whitespace
-            if getattr(tw, "comment", None):
-                comments.append(tw.comment.value.strip())
+            trailing_whitespace = node.trailing_whitespace
+            if getattr(trailing_whitespace, "comment", None):
+                comments.append(trailing_whitespace.comment.value.strip())
 
-        for c in comments:
-            cid = f"{parent_id}::c::{hashlib.md5(c.encode()).hexdigest()[:6]}"
-            self.kg.add_node(cid, "comment", text=c)
-            self.kg.add_edge(parent_id, cid, "HAS_COMMENT")
+        for comment in comments:
+            comment_id = f"{parent_id}::c::{hashlib.md5(comment.encode()).hexdigest()[:6]}"
+            self.kg.add_node(comment_id, "comment", text=comment)
+            self.kg.add_edge(parent_id, comment_id, "HAS_COMMENT")
 
-    # -----------------------------
-    # Module
-    # -----------------------------
+    # Handle module visits.
     def visit_Module(self, node: cst.Module):
         self.kg.add_node(self.module, "module", file=self.path)
         self.add_doc(node, self.module)
 
-    # -----------------------------
-    # Classes
-    # -----------------------------
+    # Handle class definitions.
     def visit_ClassDef(self, node: cst.ClassDef):
-        cname = node.name.value
-        cid = self.fq(cname)
+        class_name = node.name.value
+        class_id = self.fq(class_name)
         parent = self.module if not self.stack else self.fq(self.stack[-1])
 
-        self.kg.add_node(cid, "class", file=self.path, name=cname)
-        self.kg.add_edge(parent, cid, "CONTAINS")
+        self.kg.add_node(class_id, "class", file=self.path, name=class_name)
+        self.kg.add_edge(parent, class_id, "CONTAINS")
 
-        self.add_doc(node, cid)
-        self.add_comments(node, cid)
+        self.add_doc(node, class_id)
+        self.add_comments(node, class_id)
 
-        # INHERITS edges
+        # Handle INHERITS edges.
         for base in node.bases:
             if isinstance(base.value, cst.Name):
                 base_name = base.value.value
                 resolved = self.resolver.resolve(self.module, base_name)
-                self.kg.add_edge(cid, resolved, "INHERITS")
+                self.kg.add_edge(class_id, resolved, "INHERITS")
 
-        self.stack.append(cname)
+        self.stack.append(class_name)
 
     def leave_ClassDef(self, node: cst.ClassDef):
         self.stack.pop()
 
-    # -----------------------------
-    # Functions / Methods
-    # -----------------------------
+    # Handle function and method definitions.
     def visit_FunctionDef(self, node: cst.FunctionDef):
-        fname = node.name.value
-        fid = self.fq(fname)
+        function_name = node.name.value
+        function_id = self.fq(function_name)
         parent = self.module if not self.stack else self.fq(self.stack[-1])
 
-        self.kg.add_node(fid, "function", file=self.path, name=fname)
-        self.kg.add_edge(parent, fid, "CONTAINS")
+        self.kg.add_node(function_id, "function", file=self.path, name=function_name)
+        self.kg.add_edge(parent, function_id, "CONTAINS")
 
-        self.add_doc(node, fid)
-        self.add_comments(node, fid)
+        self.add_doc(node, function_id)
+        self.add_comments(node, function_id)
 
-        self.stack.append(fname)
-        self.current_fn = fid
+        self.stack.append(function_name)
+        self.current_fn = function_id
 
     def leave_FunctionDef(self, node: cst.FunctionDef):
         self.stack.pop()
         self.current_fn = None
 
-    # -----------------------------
     # Calls
-    # -----------------------------
     def visit_Call(self, node: cst.Call):
         if not self.current_fn:
             return
@@ -143,9 +133,7 @@ class PyExtract(cst.CSTVisitor):
                 target = f"?.{method}"
             self.kg.add_edge(self.current_fn, target, "CALLS")
 
-    # -----------------------------
     # Imports
-    # -----------------------------
     def visit_Import(self, node: cst.Import):
         for alias in node.names:
             name = alias.name.value

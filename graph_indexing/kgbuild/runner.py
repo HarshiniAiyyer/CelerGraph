@@ -11,6 +11,9 @@ from graph_indexing.kgbuild.treesitter_extractor import extract_ts
 from graph_indexing.kgbuild.python_extractor import PyExtract
 
 # Switch this to True if you want Tree-sitter nodes too
+from graph_indexing.kgbuild.python_extractor import PyExtract
+
+# Switch this to True if you want Tree-sitter nodes too
 USE_TREESITTER = False
 
 logging.basicConfig(level=logging.INFO)
@@ -22,31 +25,31 @@ def extract_project(root: str) -> KG:
     root_path = Path(root).resolve()
     root = str(root_path)
 
-    kg = KG()
+    knowledge_graph = KG()
     resolver = Resolver()
 
-    pyfiles = [
-        f for f in root_path.rglob("*.py")
-        if "__pycache__" not in f.parts
+    python_files = [
+        file_path for file_path in root_path.rglob("*.py")
+        if "__pycache__" not in file_path.parts
     ]
 
-    logger.info(f"Found {len(pyfiles)} Python files in {root}")
+    logger.info(f"Found {len(python_files)} Python files in {root}")
 
-    for file in pyfiles:
-        logger.info(f"Processing {file}")
+    for file_path in python_files:
+        logger.info(f"Processing {file_path}")
 
         if USE_TREESITTER:
-            extract_ts(str(file), root, kg)
+            extract_ts(str(file_path), root, knowledge_graph)
 
-        # LibCST extraction
+        # Handle LibCST extraction.
         try:
-            src = file.read_text(encoding="utf-8")
-            tree = cst.parse_module(src)
-            tree.visit(PyExtract(str(file), root, kg, resolver))
+            source_code = file_path.read_text(encoding="utf-8")
+            tree = cst.parse_module(source_code)
+            tree.visit(PyExtract(str(file_path), root, knowledge_graph, resolver))
         except Exception as e:
-            logger.error(f"LibCST processing failed for {file}: {e}")
+            logger.error(f"LibCST processing failed for {file_path}: {e}")
 
-    return kg
+    return knowledge_graph
 
 
 if __name__ == "__main__":
@@ -58,23 +61,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.convert_absolute:
-        # Convert existing file
+        # Convert existing file to use relative paths.
         logger.info(f"Converting {args.convert_absolute} to use relative paths")
         output_path = KG.convert_absolute_to_relative(args.convert_absolute, args.root, args.output)
         logger.info(f"Converted file saved to {output_path}")
         print(f"Converted {args.convert_absolute} -> {output_path}")
     else:
-        # Extract new knowledge graph
+        # Extract a new knowledge graph.
         target_root = args.root
         logger.info(f"Starting extraction for project at: {target_root}")
 
-        kg = extract_project(target_root)
+        knowledge_graph = extract_project(target_root)
 
-        out_file = args.output
-        with open(out_file, "w", encoding="utf-8") as f:
-            json.dump(kg.to_dict(root_path=target_root), f, indent=2)
+        output_file = args.output
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(knowledge_graph.to_dict(root_path=target_root), f, indent=2)
 
-        logger.info(f"Knowledge graph saved to {out_file}")
-        print(f"Saved {out_file}")
-
-
+        logger.info(f"Knowledge graph saved to {output_file}")
+        print(f"Saved {output_file}")

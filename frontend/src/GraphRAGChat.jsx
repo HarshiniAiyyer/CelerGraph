@@ -14,6 +14,8 @@ import {
   Activity,
   Trash2
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const API_BASE_RAW = import.meta.env.VITE_API_BASE_URL ?? '/api';
 const API_BASE = (typeof API_BASE_RAW === 'string' ? API_BASE_RAW.trim().replace(/\s+$/, '') : '/api');
@@ -536,11 +538,36 @@ const ChatInterface = ({ onLogout }) => {
                     }
                   `}
                 >
-                  <p className="whitespace-pre-wrap text-sm md:text-base leading-relaxed font-medium break-all">
-                    {typeof msg.content === 'object' && msg.content !== null
-                      ? JSON.stringify(msg.content)
-                      : msg.content}
-                  </p>
+
+                  <div className="markdown-body text-sm md:text-base leading-relaxed font-medium break-all">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        table: ({ node, ...props }) => <div className="overflow-x-auto my-4"><table className="min-w-full divide-y divide-gray-300 border border-gray-300" {...props} /></div>,
+                        thead: ({ node, ...props }) => <thead className="bg-gray-50" {...props} />,
+                        th: ({ node, ...props }) => <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 border-b border-gray-300" {...props} />,
+                        td: ({ node, ...props }) => <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 border-b border-gray-200" {...props} />,
+                        a: ({ node, ...props }) => <a className="text-blue-600 hover:underline" {...props} />,
+                        ul: ({ node, ...props }) => <ul className="list-disc pl-5 my-2" {...props} />,
+                        ol: ({ node, ...props }) => <ol className="list-decimal pl-5 my-2" {...props} />,
+                        code: ({ node, inline, className, children, ...props }) => {
+                          return inline ? (
+                            <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono text-red-500" {...props}>
+                              {children}
+                            </code>
+                          ) : (
+                            <pre className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto my-2 text-xs font-mono">
+                              <code {...props}>{children}</code>
+                            </pre>
+                          );
+                        }
+                      }}
+                    >
+                      {typeof msg.content === 'object' && msg.content !== null
+                        ? JSON.stringify(msg.content)
+                        : msg.content}
+                    </ReactMarkdown>
+                  </div>
 
                   {msg.role === 'assistant' && msg.hasGraph && (
                     <GraphVisualizer nodes={msg.graphNodes} />

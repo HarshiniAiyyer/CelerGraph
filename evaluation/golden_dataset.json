@@ -1,0 +1,83 @@
+[
+    {
+        "question": "How does routing work in fastapi?",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "What is the purpose of the TestClient class?",
+        "context_ground_truth": [
+            "infos/testclient.py"
+        ]
+    },
+    {
+        "question": "Explain the role of APIRouter.route()",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "Explain what get_request_handler does.",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "What parameters does APIWebSocketRoute accept?",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "How does routing flow from request to response?",
+        "context_ground_truth": [
+            "infos/routing.py",
+            "infos/applications.py"
+        ]
+    },
+    {
+        "question": "How is error handling implemented across the application?",
+        "context_ground_truth": [
+            "infos/exceptions.py",
+            "infos/exception_handlers.py"
+        ]
+    },
+    {
+        "question": "Show me all components that reference APIRouter.",
+        "context_ground_truth": [
+            "infos/routing.py",
+            "infos/applications.py"
+        ]
+    },
+    {
+        "question": "Which modules depend on the datastructures module?",
+        "context_ground_truth": [
+            "infos/datastructures.py"
+        ]
+    },
+    {
+        "question": "What does the comment above serialize_response() explain?",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "Show related nodes to routing.APIRouter.route.",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "What is the responsibility of the routing module?",
+        "context_ground_truth": [
+            "infos/routing.py"
+        ]
+    },
+    {
+        "question": "How are dependencies resolved in FastAPI?",
+        "context_ground_truth": [
+            "infos/dependencies/utils.py"
+        ]
+    }
+]

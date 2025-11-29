@@ -16,25 +16,25 @@ class TestEmbeddingService(unittest.TestCase):
             mock_model = MagicMock()
             mock_model.encode.return_value = _Enc()
             MockST.return_value = mock_model
-            emb = SentenceTransformerEmbedding(EmbeddingConfig(model_name="mock"))
-            vec = emb.embed("hello")
-            self.assertIsInstance(vec, list)
-            self.assertEqual(len(vec), 3)
+            embedding_service = SentenceTransformerEmbedding(EmbeddingConfig(model_name="mock"))
+            vector = embedding_service.embed("hello")
+            self.assertIsInstance(vector, list)
+            self.assertEqual(len(vector), 3)
 
     def test_embed_empty_string(self):
         with patch("core.embeddings.SentenceTransformer") as MockST:
             mock_model = MagicMock()
             mock_model.encode.return_value = []
             MockST.return_value = mock_model
-            emb = SentenceTransformerEmbedding(EmbeddingConfig(model_name="mock"))
-            vec = emb.embed("")
-            self.assertEqual(vec, [])
+            embedding_service = SentenceTransformerEmbedding(EmbeddingConfig(model_name="mock"))
+            vector = embedding_service.embed("")
+            self.assertEqual(vector, [])
 
 
 class TestSemanticCacheProvider(unittest.TestCase):
     def setUp(self):
         base = os.path.join("t_for_testing", "chroma_db_unit")
-        self.cfg = GraphRAGConfig(
+        self.config = GraphRAGConfig(
             chroma=ChromaConfig(path=base),
             embedding=EmbeddingConfig(model_name="mock"),
             neo4j=Neo4jConfig(use_neo4j=False),
@@ -44,7 +44,7 @@ class TestSemanticCacheProvider(unittest.TestCase):
 
     def test_store_and_lookup(self):
         with patch("core.embeddings.embed_text", return_value=[0.0, 0.1, 0.2]):
-            cache = SemanticCacheProvider(self.cfg)
+            cache = SemanticCacheProvider(self.config)
             cache.store("q1", "ans1")
             hit = cache.lookup("q1")
             self.assertIsNotNone(hit)
@@ -57,16 +57,16 @@ class TestLLMProvider(unittest.TestCase):
             mock = MagicMock()
             mock.invoke.return_value = type("Resp", (), {"content": "OK"})()
             MockLLM.return_value = mock
-            prov = GroqLLMProvider(LLMConfig(model_name="mock", api_key="mock"))
-            out = prov.generate("hi")
-            self.assertEqual(out, "OK")
+            provider = GroqLLMProvider(LLMConfig(model_name="mock", api_key="mock"))
+            output = provider.generate("hi")
+            self.assertEqual(output, "OK")
 
 
 class TestJSONDocumentProcessor(unittest.TestCase):
     def test_load_documents(self):
-        proc = JSONDocumentProcessor()
+        processor = JSONDocumentProcessor()
         path = os.path.join("t_for_testing", "temp_question.json")
-        docs = proc.load_documents(path)
+        docs = processor.load_documents(path)
         self.assertTrue(isinstance(docs, list) or isinstance(docs, dict))
 
 

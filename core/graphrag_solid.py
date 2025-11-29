@@ -142,7 +142,6 @@ class GraphRAGSystem:
         Returns:
             List of processed documents.
         """
-        from typing import List, Dict, Any
         documents: List[Dict[str, Any]] = []
         if not results or not results["ids"]:
             return documents
@@ -284,9 +283,9 @@ def create_system_from_env() -> GraphRAGSystem:
 def main() -> None:
     """Main CLI interface."""
     print("Initializing GraphRAG (SOLID Edition)...")
-    print("  • Loading configuration...")
-    print("  • Setting up services...")
-    print("  • Establishing connections...")
+    print("  - Loading configuration...")
+    print("  - Setting up services...")
+    print("  - Establishing connections...")
     print("\nGraphRAG Ready. Type 'exit' to stop.\n")
     
     try:

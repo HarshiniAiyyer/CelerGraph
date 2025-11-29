@@ -13,7 +13,7 @@ import json
 from typing import List, Dict
 from pathlib import Path
 
-# 🔥 Phoenix instrumentation
+# Phoenix instrumentation
 from observability.tracing import trace_span
 from observability.rag import log_rag_event, record_generation_metrics
 
@@ -21,9 +21,7 @@ from observability.rag import log_rag_event, record_generation_metrics
 CHAT_HISTORY_PATH = os.getenv("CHAT_HISTORY_PATH", "chat_history.json")
 
 
-# --------------------------
 # Chat History Persistence
-# --------------------------
 
 def load_chat_history() -> List[Dict]:
     if os.path.exists(CHAT_HISTORY_PATH):
@@ -66,9 +64,7 @@ class ChatHistoryController:
         return item
 
 
-# --------------------------
 # Controllers
-# --------------------------
 
 class ChatController:
     @trace_span("rag.controller.chat")

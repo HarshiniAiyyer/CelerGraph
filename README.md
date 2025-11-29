@@ -273,6 +273,27 @@ Notes:
 3. **Update API**: Edit `api/controllers.py`
 4. **Frontend changes**: Edit `frontend/src/`
 
+## Evaluation Pipeline
+The project includes a comprehensive evaluation suite to measure RAG quality and performance.
+
+### 1. Quality Assurance (Faithfulness & Relevance)
+Uses `arize-phoenix-evals` with an LLM judge to verify answer quality.
+```bash
+python evaluation/run_evals.py
+```
+
+### 2. Retrieval Quality (Recall & Similarity)
+Measures how effectively the system retrieves relevant code chunks.
+```bash
+python evaluation/run_retrieval_evals.py
+```
+
+### 3. Latency & Confidence Monitoring
+Checks system performance against defined thresholds (e.g., <150ms retrieval).
+```bash
+python evaluation/run_latency_check.py
+```
+
 ## Next Steps
 
 - Customize the knowledge graph extraction for your specific codebase

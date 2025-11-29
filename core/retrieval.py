@@ -15,7 +15,7 @@ from core.code_exceptions import ChromaError
 from config.logger import log
 from core.embeddings import embed_text
 
-# 🔥 Phoenix instrumentation imports
+# Phoenix instrumentation imports
 from observability.tracing import trace_span
 from observability.rag import record_retrieval_metrics
 
@@ -36,7 +36,7 @@ def get_node_collection() -> chromadb.Collection:
         raise ChromaError(f"Node collection error: {exc}") from exc
 
 
-# ⭐ Instrumentation HERE
+# Instrumentation HERE
 @trace_span("rag.retrieve")
 def retrieve_similar_nodes(query: str, top_k: int = 8) -> List[Dict[str, Any]]:
     """Retrieve the most similar nodes from the knowledge graph."""
@@ -87,7 +87,7 @@ def retrieve_similar_nodes(query: str, top_k: int = 8) -> List[Dict[str, Any]]:
 
         nodes.sort(key=lambda x: x["similarity"], reverse=True)
 
-        # ⭐ Phoenix retrieval metrics
+        # Phoenix retrieval metrics
         retrieval_latency = (time.perf_counter() - t0) * 1000
         record_retrieval_metrics(
             num_candidates=len(ids),

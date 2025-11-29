@@ -16,7 +16,7 @@ from core.interfaces import EmbeddingProvider
 from config.logger import log
 from sentence_transformers import SentenceTransformer
 
-# 🔥 Observability
+# Observability
 from observability.tracing import trace_span
 
 

@@ -11,10 +11,10 @@ class TestRateLimit(unittest.TestCase):
         import time
         time.sleep(6)
         for _ in range(10):
-            r = self.client.get("/api/health")
-            self.assertEqual(r.status_code, 200)
-        r = self.client.get("/api/health")
-        self.assertEqual(r.status_code, 429)
+            response = self.client.get("/api/health")
+            self.assertEqual(response.status_code, 200)
+        response = self.client.get("/api/health")
+        self.assertEqual(response.status_code, 429)
 
 
 if __name__ == "__main__":

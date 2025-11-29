@@ -15,9 +15,9 @@ class TestStreamingChat(unittest.TestCase):
             yield "C"
 
         with patch("api.controllers.stream_answer", return_value=fake_stream()):
-            with self.client.stream("POST", "/api/chat/stream", json={"message": "Hi"}) as r:
-                self.assertEqual(r.status_code, 200)
-                data = b"".join(list(r.iter_bytes()))
+            with self.client.stream("POST", "/api/chat/stream", json={"message": "Hi"}) as response:
+                self.assertEqual(response.status_code, 200)
+                data = b"".join(list(response.iter_bytes()))
                 self.assertEqual(data.decode(), "ABC")
 
 

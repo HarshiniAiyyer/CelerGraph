@@ -718,6 +718,47 @@ python chunker.py
 
 ---
 
+## Evaluation & Quality Assurance
+
+The system includes a robust evaluation pipeline designed to measure the accuracy, relevance, and performance of the RAG system.
+
+### 1. Evaluation Dataset (`evaluation/golden_dataset.json`)
+A curated set of "golden" questions and ground truth references (file paths) used to benchmark the system.
+- **Function-level**: "How does `APIRouter.route()` work?"
+- **Cross-file**: "How does routing flow from request to response?"
+- **Architecture**: "Show me all components that reference `APIRouter`."
+
+### 2. Quality Assurance Metrics (`evaluation/run_evals.py`)
+Uses `arize-phoenix-evals` with an LLM judge (Groq) to compute:
+- **Faithfulness**: Is the answer derived *only* from the retrieved context? (Avoids hallucinations)
+- **Answer Relevance**: Does the answer directly address the user's question?
+
+### 3. Retrieval Quality Metrics (`evaluation/run_retrieval_evals.py`)
+Focuses specifically on the retrieval step (ChromaDB + Neo4j):
+- **Recall@k**: Percentage of expected ground truth files found in the top-k retrieved chunks.
+- **Similarity Score**: Cosine similarity of the retrieved chunks to the query.
+- **Status Checks**: Flags queries with "MISS" (0 recall) or "LOW_SIM" (<0.75 similarity).
+
+### 4. Latency & Confidence Monitoring (`evaluation/run_latency_check.py`)
+Ensures the system meets performance SLAs:
+- **Retrieval Latency**: Target < 150ms
+- **Generation Latency**: Monitored for anomalies
+- **Confidence**: Alerts if average similarity drops below 0.65
+
+### Running Evaluations
+```bash
+# Run full QA suite
+python evaluation/run_evals.py
+
+# Run retrieval-only check
+python evaluation/run_retrieval_evals.py
+
+# Run latency monitor
+python evaluation/run_latency_check.py
+```
+
+---
+
 ## API Endpoints
 
 The FastAPI backend exposes the following documented endpoints. Visit `http://localhost:8000/docs` (Swagger UI) or `http://localhost:8000/redoc` (ReDoc) for interactive documentation. The raw OpenAPI spec is available at `http://localhost:8000/openapi.json`.

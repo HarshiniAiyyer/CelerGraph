@@ -6,6 +6,13 @@ environment variable integration. Follows Single Responsibility Principle
 by separating configuration logic from business logic.
 """
 
+"""Manages configuration settings for the GraphRAG system.
+
+This module centralizes configuration using dataclasses for type safety and
+integrates with environment variables. It adheres to the Single Responsibility Principle
+by keeping configuration logic separate from business logic.
+"""
+
 import os
 from dataclasses import dataclass
 from typing import Optional
@@ -13,7 +20,7 @@ from typing import Optional
 
 @dataclass
 class ChromaConfig:
-    """ChromaDB configuration settings."""
+    """Configuration settings for ChromaDB."""
     path: str = "vectorstore/chroma_db"
     node_collection: str = "node_embeddings"
     code_collection: str = "code_chunks"
@@ -22,7 +29,7 @@ class ChromaConfig:
     
     @classmethod
     def from_env(cls) -> "ChromaConfig":
-        """Create configuration from environment variables."""
+        """Create a configuration instance from environment variables."""
         return cls(
             path=os.getenv("CHROMA_PATH", "vectorstore/chroma_db"),
             node_collection=os.getenv("CHROMA_NODE_COLLECTION", "node_embeddings"),
@@ -34,14 +41,14 @@ class ChromaConfig:
 
 @dataclass
 class EmbeddingConfig:
-    """Embedding model configuration."""
+    """Configuration for the embedding model."""
     model_name: str = "BAAI/bge-small-en"
     cache_size: int = 1
     normalize_embeddings: bool = True
     
     @classmethod
     def from_env(cls) -> "EmbeddingConfig":
-        """Create configuration from environment variables."""
+        """Create a configuration instance from environment variables."""
         return cls(
             model_name=os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-en"),
             cache_size=int(os.getenv("EMBEDDING_CACHE_SIZE", "1")),
@@ -51,7 +58,7 @@ class EmbeddingConfig:
 
 @dataclass
 class Neo4jConfig:
-    """Neo4j database configuration."""
+    """Configuration for the Neo4j database."""
     uri: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
@@ -59,7 +66,7 @@ class Neo4jConfig:
     
     @classmethod
     def from_env(cls) -> "Neo4jConfig":
-        """Create configuration from environment variables."""
+        """Create a configuration instance from environment variables."""
         return cls(
             uri=os.getenv("NEO4J_URI"),
             username=os.getenv("NEO4J_USERNAME"),
@@ -70,7 +77,7 @@ class Neo4jConfig:
 
 @dataclass
 class LLMConfig:
-    """LLM configuration settings."""
+    """Configuration settings for the Large Language Model."""
     model_name: str = "openai/gpt-oss-120b"
     temperature: float = 0.2
     max_tokens: int = 800
@@ -78,7 +85,7 @@ class LLMConfig:
     
     @classmethod
     def from_env(cls) -> "LLMConfig":
-        """Create configuration from environment variables."""
+        """Create a configuration instance from environment variables."""
         return cls(
             model_name=os.getenv("LLM_MODEL_NAME", "openai/gpt-oss-120b"),
             temperature=float(os.getenv("LLM_TEMPERATURE", "0.2")),
@@ -89,12 +96,12 @@ class LLMConfig:
 
 @dataclass
 class CacheConfig:
-    """Semantic cache configuration."""
+    """Configuration for the semantic cache."""
     threshold: float = 0.9
     
     @classmethod
     def from_env(cls) -> "CacheConfig":
-        """Create configuration from environment variables."""
+        """Create a configuration instance from environment variables."""
         return cls(
             threshold=float(os.getenv("CACHE_THRESHOLD", "0.9")),
         )
@@ -102,7 +109,7 @@ class CacheConfig:
 
 @dataclass
 class GraphRAGConfig:
-    """Main configuration container for GraphRAG system."""
+    """Main configuration container for the GraphRAG system."""
     chroma: ChromaConfig
     embedding: EmbeddingConfig
     neo4j: Neo4jConfig
@@ -111,7 +118,7 @@ class GraphRAGConfig:
     
     @classmethod
     def from_env(cls) -> "GraphRAGConfig":
-        """Create complete configuration from environment variables."""
+        """Create a complete configuration instance from environment variables."""
         return cls(
             chroma=ChromaConfig.from_env(),
             embedding=EmbeddingConfig.from_env(),

@@ -102,10 +102,10 @@ class SemanticCache:
         
         try:
             log.debug(f"Cache lookup for question: {question[:50]}...")
-            vec = embed_text(question)
+            embedding_vector = embed_text(question)
             from typing import Sequence, cast
             results = self.collection.query(
-                query_embeddings=[cast(Sequence[float], vec)],
+                query_embeddings=[cast(Sequence[float], embedding_vector)],
                 n_results=1,
             )
 
@@ -132,13 +132,13 @@ class SemanticCache:
                 except Exception:
                     cached_references = []
 
-            toks_q = self._tokens(question)
-            toks_doc = self._tokens(doc)
+            question_tokens = self._tokens(question)
+            doc_tokens = self._tokens(doc)
             overlap = 0.0
-            if toks_q and toks_doc:
-                inter = len(toks_q & toks_doc)
-                union = len(toks_q | toks_doc)
-                overlap = inter / union
+            if question_tokens and doc_tokens:
+                intersection = len(question_tokens & doc_tokens)
+                union = len(question_tokens | doc_tokens)
+                overlap = intersection / union
 
             if similarity >= self.threshold and overlap >= 0.3:
                 log.info(f"[CACHE HIT] similarity={similarity:.3f}")

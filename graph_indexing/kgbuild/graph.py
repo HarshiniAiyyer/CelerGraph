@@ -15,45 +15,45 @@ class KG:
         self.edges: List[Dict[str, Any]] = []
 
     # ------------------------------------------------------
-    # Recursive sanitizer for ANY Python object
+    # Recursive sanitizer for any Python object.
     # ------------------------------------------------------
     def _sanitize(self, value):
         """Recursively convert any value into a JSON-serializable form."""
-        # basic primitives
+        # Handle basic primitives.
         if isinstance(value, (str, int, float, bool)) or value is None:
             return value
 
-        # lists, tuples, sets
+        # Handle lists, tuples, and sets.
         if isinstance(value, (list, tuple, set)):
             return [self._sanitize(v) for v in value]
 
-        # dicts
+        # Handle dictionaries.
         if isinstance(value, dict):
             return {k: self._sanitize(v) for k, v in value.items()}
 
-        # everything else, including LibCST nodes → string
+        # Handle everything else, including LibCST nodes, by converting to string.
         return str(value)
 
     def _sanitize_props(self, props: Dict[str, Any]) -> Dict[str, Any]:
         return {k: self._sanitize(v) for k, v in props.items()}
 
     # ------------------------------------------------------
-    # Node + Edge creation
+    # Node and Edge creation methods.
     # ------------------------------------------------------
-    def add_node(self, nid: str, ntype: str, **props):
+    def add_node(self, node_id: str, node_type: str, **props):
         props = self._sanitize_props(props)
 
-        if nid not in self.nodes:
-            self.nodes[nid] = {"id": nid, "type": ntype, "props": {}}
+        if node_id not in self.nodes:
+            self.nodes[node_id] = {"id": node_id, "type": node_type, "props": {}}
 
-        self.nodes[nid]["props"].update(props)
+        self.nodes[node_id]["props"].update(props)
 
-    def add_edge(self, src: str, dst: str, etype: str):
-        # edges have no props — avoids any JSON issues
+    def add_edge(self, source: str, destination: str, edge_type: str):
+        # Edges have no properties to avoid JSON serialization issues.
         self.edges.append({
-            "src": src,
-            "dst": dst,
-            "type": etype
+            "src": source,
+            "dst": destination,
+            "type": edge_type
         })
 
     # ------------------------------------------------------

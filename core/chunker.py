@@ -4,6 +4,8 @@ from pathlib import Path
 from tree_sitter import Parser
 import warnings
 
+from config.logger import log
+
 # Suppress FutureWarning from tree_sitter (deprecated Language constructor)
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning, module="tree_sitter")
@@ -14,11 +16,10 @@ import chromadb
 
 from core.embeddings import embed_text
 
-# 🔥 Observability
+# Observability
 from observability.tracing import trace_span
 from opentelemetry import trace as otel_trace
 
-from typing import Optional
 from typing import Optional
 try:
     # Suppress FutureWarning from tree_sitter (deprecated Language constructor)
@@ -30,7 +31,7 @@ try:
     parser: Optional[Parser] = Parser()
     parser.set_language(PY_LANG)
 except Exception as e:
-    print(f"Warning: Failed to initialize tree-sitter parser: {e}")
+    log.warning(f"Failed to initialize tree-sitter parser: {e}")
     PY_LANG = None
     parser = None  # runtime fallback when tree-sitter not available
 
@@ -96,17 +97,17 @@ def ingest_folder(folder: str):
         chunks = chunk_file(file)
         stored_for_file = 0
         for i, chunk in enumerate(chunks):
-            cid = f"{file.relative_to(root)}::{i}"
+            chunk_id = f"{file.relative_to(root)}::{i}"
             # Skip empty chunks or failed embeddings to prevent Chroma errors
             if not chunk.strip():
                 continue
-            vec = embed_text(chunk)
-            if not vec:
+            embedding_vector = embed_text(chunk)
+            if not embedding_vector:
                 continue
             from typing import Sequence, List, cast
-            embeddings: List[Sequence[float]] = [cast(Sequence[float], vec)]
+            embeddings: List[Sequence[float]] = [cast(Sequence[float], embedding_vector)]
             collection.add(
-                ids=[cid],
+                ids=[chunk_id],
                 embeddings=embeddings,
                 documents=[chunk],
                 metadatas=[{"file": str(file)}],
@@ -121,7 +122,7 @@ def ingest_folder(folder: str):
         span.set_attribute("rag.index.total_chunks", stored)
         span.set_attribute("rag.index.indexed_files", len(indexed_files))
 
-    print(f"Stored {stored} chunks into code_chunks.")
+    log.info(f"Stored {stored} chunks into code_chunks.")
     return list(indexed_files), stored
 
 
