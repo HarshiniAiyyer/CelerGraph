@@ -882,14 +882,17 @@ graph LR
   FE -->|HTTP| API
   API --> RL
   API --> CORS
-  API --> Routes --> Ctrl --> RAG
+  API --> Routes
+  Routes --> Ctrl
+  Ctrl --> RAG
   RAG --> CH
   CH --> CE
   CH --> NE
   CH --> SC
-  RAG -. optional neighbors .-> N4J
+  RAG -.->|optional neighbors| N4J
   RAG --> Groq
-  API --> OTEL --> PH
+  API --> OTEL
+  OTEL --> PH
   RAG --> OTEL
   API --> Log
   FE -->|/api/chat| API
@@ -902,17 +905,17 @@ graph LR
 
 ```mermaid
 graph TD
-  FE[Frontend (Vite/React)] -- HTTP --> API[FastAPI API]
-  API -- CORS + RateLimit --> MW[Middlewares]
-  API -- OpenAPI --> Docs[Swagger/ReDoc]
+  FE[Frontend (Vite/React)] -->|HTTP| API[FastAPI API]
+  API -->|CORS + RateLimit| MW[Middlewares]
+  API -->|OpenAPI| Docs[Swagger/ReDoc]
   API --> Ctrl[Controllers]
   Ctrl --> RAG[GraphRAG Pipeline]
   RAG --> CH[ChromaDB]
-  RAG -. optional .-> N4J[Neo4j]
+  RAG -.->|optional| N4J[Neo4j]
   RAG --> LLM[Groq LLM]
   RAG --> Cache[Semantic Cache]
-  Obs[Phoenix + OTEL] <-- Spans/Metrics --> API
-  Obs <-- Spans/Metrics --> RAG
+  Obs[Phoenix + OTEL] <-->|Spans/Metrics| API
+  Obs <-->|Spans/Metrics| RAG
   subgraph Storage
     CH
     Cache
