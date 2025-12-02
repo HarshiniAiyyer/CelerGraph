@@ -53,15 +53,7 @@ def load_dataset(path):
     # Phoenix expects 'input', 'output', 'context' (for hallucination), 'reference' (for QA)
     # We need to ensure 'context' is a list of strings or a single string
     
-    # Update results with context from the RAG response
-    # We need to re-run the loop or just update the logic above. 
-    # Let's rewrite the loop part to be cleaner in the full file replacement or just assume we have it.
-    # Wait, I am replacing the whole file content in this block? No, just a chunk.
-    # I need to make sure 'results' list has 'context'.
-    
-    # Let's look at the previous loop in the file. It didn't capture context.
-    # I need to update the loop first.
-    
+    # Update results with context from the RAG response   
     pass
 
 def main():
