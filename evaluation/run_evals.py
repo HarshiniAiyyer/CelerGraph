@@ -62,7 +62,6 @@ def load_dataset(path):
     # Let's look at the previous loop in the file. It didn't capture context.
     # I need to update the loop first.
     
-    # Actually, I will replace the whole main function to be safe and clean.
     pass
 
 def main():
