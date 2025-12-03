@@ -25,7 +25,7 @@ MANIFEST
 .ruff_cache
 
 # Virtual Environments
-.env
+!.env
 .venv
 !env/
 venv/
